@@ -1,4 +1,33 @@
 import calendar
+import os
+
+
+def read_config(file_path):
+    """
+    Reads configuration from a file.
+    Format expected: KEY=VALUE per line.
+    Lines starting with # are comments.
+    """
+    config = {}
+    expanded_path = os.path.expanduser(file_path)
+
+    if not os.path.exists(expanded_path):
+        return config
+
+    try:
+        with open(expanded_path, 'r') as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith('#'):
+                    continue
+
+                if '=' in line:
+                    key, value = line.split('=', 1)
+                    config[key.strip()] = value.strip()
+    except Exception as e:
+        print(f"Error reading config file {expanded_path}: {e}")
+
+    return config
 
 
 class HighlightCalendar(calendar.TextCalendar):
