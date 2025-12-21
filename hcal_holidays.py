@@ -43,8 +43,8 @@ def get_holidays(country, year):
 
         # Iterate over original holidays to check for Sunday rule
         # We use a sorted list of the original holidays to process them in order,
-        # though strictly speaking the order doesn't change the outcome of the logic 
-        # as long as we check against the full set of holidays (including previously added substitutes? 
+        # though strictly speaking the order doesn't change the outcome of the logic
+        # as long as we check against the full set of holidays (including previously added substitutes?
         # No, usually substitutes don't chain from other substitutes, but they do chain from fixed holidays overlapping).
         # Actually, if we have Sun (Holiday 1), Mon (Holiday 2), the substitute for Holiday 1 goes to Tue.
         # If Tue was also a fixed holiday, it would go to Wed.
