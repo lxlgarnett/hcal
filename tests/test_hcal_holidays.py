@@ -6,6 +6,7 @@ class TestJapanHolidays(unittest.TestCase):
     """
     Unit tests for Japan holiday calculations.
     """
+
     def test_substitute_holiday_simple(self):
         """
         Test simple substitute holiday logic (Sunday holiday -> Monday).
