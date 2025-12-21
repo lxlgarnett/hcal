@@ -42,6 +42,37 @@ class TestJapanHolidays(unittest.TestCase):
         self.assertNotIn((2, 12), holidays_2023)
         self.assertNotIn((2, 13), holidays_2023)
 
+    def test_emperors_birthday_showa_era(self):
+        """
+        Test Emperor's Birthday during the Showa era (pre-1989).
+        """
+        holidays_1980 = get_holidays('Japan', 1980)
+        self.assertIn((4, 29), holidays_1980, "April 29 should be Emperor's Birthday in 1980")
+
+    def test_emperors_birthday_heisei_era(self):
+        """
+        Test Emperor's Birthday during the Heisei era (1989-2018).
+        """
+        holidays_1995 = get_holidays('Japan', 1995)
+        self.assertIn((12, 23), holidays_1995, "December 23 should be Emperor's Birthday in 1995")
+        self.assertNotIn((2, 23), holidays_1995, "February 23 should not be Emperor's Birthday in 1995")
+
+    def test_no_emperors_birthday_in_2019(self):
+        """
+        Test for no Emperor's Birthday in 2019.
+        """
+        holidays_2019 = get_holidays('Japan', 2019)
+        self.assertNotIn((12, 23), holidays_2019, "There should be no Emperor's Birthday in 2019")
+        self.assertNotIn((2, 23), holidays_2019, "There should be no Emperor's Birthday in 2019")
+
+    def test_emperors_birthday_reiwa_era(self):
+        """
+        Test Emperor's Birthday during the Reiwa era (post-2020).
+        """
+        holidays_2021 = get_holidays('Japan', 2021)
+        self.assertIn((2, 23), holidays_2021, "February 23 should be Emperor's Birthday in 2021")
+        self.assertNotIn((12, 23), holidays_2021, "December 23 should not be Emperor's Birthday in 2021")
+
 
 if __name__ == '__main__':
     unittest.main()
