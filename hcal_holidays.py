@@ -29,7 +29,6 @@ def get_holidays(country, year):
         holidays.add((1, second_monday_day))
 
         holidays.add((2, 11))  # National Foundation Day
-        holidays.add((2, 23))  # Emperor's Birthday
         holidays.add((4, 29))  # Showa Day
         holidays.add((5, 3))  # Constitution Memorial Day
         holidays.add((5, 4))  # Greenery Day
@@ -37,6 +36,14 @@ def get_holidays(country, year):
         holidays.add((11, 3))  # Culture Day
         holidays.add((11, 23))  # Labor Thanksgiving Day
 
+        # Emperor's Birthday
+        if year <= 1988:
+            holidays.add((4, 29))  
+        elif 1989 <= year <= 2018:
+            holidays.add((12, 23))  
+        elif year >= 2020:
+            holidays.add((2, 23))
+        
         # Simple Logic for Vernal/Autumnal Equinox (Approximate)
         # These change slightly, but for a simple CLI tool, approximations or specific year logic might be needed.
         # Keeping it simple with fixed dates for now as requested for "New Year".
