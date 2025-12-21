@@ -55,12 +55,12 @@ class HighlightCalendar(calendar.TextCalendar):
 
         # Check for Holidays
         if self.country:
-             # Refresh holidays if year changes (though formatmonth sets curr_y)
-             # Optimization: We could cache this, but it's cheap to fetch for now.
-             self.holidays = get_holidays(self.country, self.curr_y)
-             
-             if (self.curr_m, day) in self.holidays:
-                 return f"\033[31m{s}\033[0m"  # Red
+            # Refresh holidays if year changes (though formatmonth sets curr_y)
+            # Optimization: We could cache this, but it's cheap to fetch for now.
+            self.holidays = get_holidays(self.country, self.curr_y)
+
+            if (self.curr_m, day) in self.holidays:
+                return f"\033[31m{s}\033[0m"  # Red
 
         # Weekend coloring
         if weekday == calendar.SUNDAY:
