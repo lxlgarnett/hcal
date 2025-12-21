@@ -7,6 +7,9 @@ from hcal_util import HighlightCalendar
 
 
 def main():
+    """
+    Main function to parse arguments and display the calendar.
+    """
     parser = argparse.ArgumentParser(description="Show calendar on terminal")
     parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")
     parser.add_argument('year', type=int, nargs='?', help="Year (e.g. 2023)")

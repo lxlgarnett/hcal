@@ -3,6 +3,15 @@ import datetime
 def get_holidays(country, year):
     """
     Returns a set of (month, day) tuples for the holidays of the specified country and year.
+
+    Currently supports 'Japan' with fixed holidays and substitute holiday logic.
+
+    Args:
+        country (str): The name of the country (e.g., 'Japan').
+        year (int): The year to calculate holidays for.
+
+    Returns:
+        set: A set of tuples (month, day) representing the holidays.
     """
     holidays = set()
 
