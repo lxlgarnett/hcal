@@ -44,8 +44,13 @@ def main():
 
     # If both provided, use them as is (args.month, args.year)
 
+    # Read config
+    from hcal_util import read_config
+    config = read_config("~/.hcalrc")
+    country = config.get('country')
+
     # TextCalendar instance
-    cal = HighlightCalendar(calendar.SUNDAY, now.year, now.month, now.day)
+    cal = HighlightCalendar(calendar.SUNDAY, now.year, now.month, now.day, country=country)
 
     if month:
         print(cal.formatmonth(year, month))
