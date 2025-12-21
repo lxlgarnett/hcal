@@ -42,6 +42,17 @@ class TestJapanHolidays(unittest.TestCase):
         self.assertNotIn((2, 12), holidays_2023)
         self.assertNotIn((2, 13), holidays_2023)
 
+    def test_coming_of_age_day(self):
+        """
+        Test "Coming of Age Day" (2nd Monday of January).
+        """
+        # 2024: Jan 1 is Monday. 2nd Monday is Jan 8.
+        self.assertIn((1, 8), get_holidays('Japan', 2024))
+        # 2025: Jan 1 is Wednesday. 2nd Monday is Jan 13.
+        self.assertIn((1, 13), get_holidays('Japan', 2025))
+        # 2026: Jan 1 is Thursday. 2nd Monday is Jan 12.
+        self.assertIn((1, 12), get_holidays('Japan', 2026))
+
     def test_emperors_birthday_showa_era(self):
         """
         Test Emperor's Birthday during the Showa era (pre-1989).
