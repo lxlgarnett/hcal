@@ -32,7 +32,21 @@ def read_config(file_path):
 
 
 class HighlightCalendar(calendar.TextCalendar):
+    """
+    A custom TextCalendar that highlights the current day, weekends, and holidays.
+    """
+
     def __init__(self, firstweekday=0, today_year=None, today_month=None, today_day=None, country=None):
+        """
+        Initializes the HighlightCalendar.
+
+        Args:
+            firstweekday (int): The first day of the week (0=Monday, 6=Sunday).
+            today_year (int): The current year.
+            today_month (int): The current month.
+            today_day (int): The current day.
+            country (str): The country code for holiday calculations (e.g., 'Japan').
+        """
         super().__init__(firstweekday)
         self.today_year = today_year
         self.today_month = today_month
@@ -43,6 +57,19 @@ class HighlightCalendar(calendar.TextCalendar):
         self.holidays = set()
 
     def formatday(self, day, weekday, width):
+        """
+        Returns a formatted string for a single day.
+
+        Highlights the current day, weekends, and holidays with ANSI color codes.
+
+        Args:
+            day (int): The day number.
+            weekday (int): The day of the week (0=Monday, 6=Sunday).
+            width (int): The width of the column.
+
+        Returns:
+            str: The formatted day string.
+        """
         s = super().formatday(day, weekday, width)
         if day == 0: return s
 
@@ -71,6 +98,18 @@ class HighlightCalendar(calendar.TextCalendar):
         return s
 
     def formatmonth(self, theyear, themonth, w=0, l=0):
+        """
+        Returns a formatted month string.
+
+        Args:
+            theyear (int): The year.
+            themonth (int): The month.
+            w (int): Width of date columns.
+            l (int): Number of newlines between weeks.
+
+        Returns:
+            str: The formatted month string.
+        """
         self.curr_y = theyear
         self.curr_m = themonth
         return super().formatmonth(theyear, themonth, w, l)

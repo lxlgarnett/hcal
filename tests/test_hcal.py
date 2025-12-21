@@ -4,6 +4,9 @@ import sys
 
 
 def test_hcal_highlighting():
+    """
+    Test that the current day is highlighted when running hcal for the current month.
+    """
     # Get today's date
     now = datetime.datetime.now()
     day = now.day
@@ -43,6 +46,9 @@ def test_hcal_highlighting():
 
 
 def test_hcal_no_highlighting_wrong_month():
+    """
+    Test that the current day is NOT highlighted when running hcal for a different month.
+    """
     # Check next month (or previous)
     now = datetime.datetime.now()
     if now.month == 12:
@@ -64,6 +70,9 @@ def test_hcal_no_highlighting_wrong_month():
 
 
 def test_hcal_colors():
+    """
+    Test that weekends are colored correctly (Saturday blue, Sunday red).
+    """
     # Run hcal for a known month: Dec 2025
     # Dec 1, 2025 is a Monday.
     # Dec 6 is Saturday (Blue).

@@ -21,3 +21,7 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py') --fail-under=8.0
+    - name: Run tests
+      run: |
+        python -m unittest tests/test_hcal_holidays.py
+        python tests/test_hcal.py
