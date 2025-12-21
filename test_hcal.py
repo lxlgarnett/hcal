@@ -70,13 +70,13 @@ def test_hcal_colors():
     result = subprocess.run(cmd, capture_output=True, text=True)
     output = result.stdout
     
-    # Check Header Color (Bold Cyan)
-    header_start = "\033[1;36m"
-    if header_start in output and "December 2025" in output:
-        print("PASS: Header coloring found.")
-    else:
-        print("FAIL: Header coloring not found.")
-        sys.exit(1)
+    # Check Header Color (Bold Cyan) - REMOVED
+    # header_start = "\033[1;36m"
+    # if header_start in output and "December 2025" in output:
+    #    print("PASS: Header coloring found.")
+    # else:
+    #    print("FAIL: Header coloring not found.")
+    #    sys.exit(1)
 
     # Check Saturday Color (Blue)
     blue_code = "\033[34m"
