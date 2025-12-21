@@ -19,6 +19,15 @@ def get_holidays(country, year):
     if country.lower() == 'japan':
         # Fixed holidays
         holidays.add((1, 1))  # New Year's Day
+
+        # Coming of Age Day (2nd Monday of January)
+        # Happy Monday System (since 2000)
+        first_jan = datetime.date(year, 1, 1)
+        # weekday(): 0=Mon, 6=Sun
+        first_monday_day = 1 + (0 - first_jan.weekday() + 7) % 7
+        second_monday_day = first_monday_day + 7
+        holidays.add((1, second_monday_day))
+
         holidays.add((2, 11))  # National Foundation Day
         holidays.add((2, 23))  # Emperor's Birthday
         holidays.add((4, 29))  # Showa Day
