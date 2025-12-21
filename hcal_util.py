@@ -50,6 +50,10 @@ class HighlightCalendar(calendar.TextCalendar):
             # White background (47), Black text (30) for contrast
             return f"\033[47;30m{s}\033[0m"
 
+        # New Year's Day (Jan 1st)
+        if self.curr_m == 1 and day == 1:
+            return f"\033[31m{s}\033[0m"  # Red
+
         # Weekend coloring
         if weekday == calendar.SUNDAY:
             return f"\033[31m{s}\033[0m"  # Red
