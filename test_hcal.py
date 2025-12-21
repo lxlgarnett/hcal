@@ -60,6 +60,41 @@ def test_hcal_no_highlighting_wrong_month():
     else:
         print("PASS: No highlighting in wrong month.")
 
+def test_hcal_colors():
+    # Run hcal for a known month: Dec 2025
+    # Dec 1, 2025 is a Monday.
+    # Dec 6 is Saturday (Blue).
+    # Dec 7 is Sunday (Red).
+    
+    cmd = [sys.executable, "./hcal", "12", "2025"]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    output = result.stdout
+    
+    # Check Header Color (Bold Cyan)
+    header_start = "\033[1;36m"
+    if header_start in output and "December 2025" in output:
+        print("PASS: Header coloring found.")
+    else:
+        print("FAIL: Header coloring not found.")
+        sys.exit(1)
+
+    # Check Saturday Color (Blue)
+    blue_code = "\033[34m"
+    if blue_code in output:
+         print("PASS: Saturday coloring found.")
+    else:
+         print("FAIL: Saturday coloring not found.")
+         sys.exit(1)
+
+    # Check Sunday Color (Red)
+    red_code = "\033[31m"
+    if red_code in output:
+         print("PASS: Sunday coloring found.")
+    else:
+         print("FAIL: Sunday coloring not found.")
+         sys.exit(1)
+
 if __name__ == "__main__":
     test_hcal_highlighting()
     test_hcal_no_highlighting_wrong_month()
+    test_hcal_colors()
