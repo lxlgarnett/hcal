@@ -71,17 +71,6 @@ def main():
 
             return s
 
-        def formatweekheader(self, width):
-            headers = []
-            for i in self.iterweekdays():
-                day = calendar.day_abbr[i][:width].center(width)
-                if i == calendar.SUNDAY:
-                    headers.append(f"\033[31m{day}\033[0m")
-                elif i == calendar.SATURDAY:
-                    headers.append(f"\033[34m{day}\033[0m")
-                else:
-                    headers.append(day)
-            return ' '.join(headers)
 
         def formatmonth(self, theyear, themonth, w=0, l=0):
             self.curr_y = theyear
