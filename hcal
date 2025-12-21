@@ -3,37 +3,37 @@
 import argparse
 import calendar
 import datetime
-import sys
 from hcal_util import HighlightCalendar
+
 
 def main():
     parser = argparse.ArgumentParser(description="Show calendar on terminal")
     parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")
     parser.add_argument('year', type=int, nargs='?', help="Year (e.g. 2023)")
-    
+
     args = parser.parse_args()
-    
+
     now = datetime.datetime.now()
-    
+
     year = args.year
     month = args.month
-    
+
     # Handle logic:
     # hcal -> current month, current year
     # hcal 2024 -> whole year 2024
     # hcal 12 2024 -> Dec 2024
-    
+
     # Adjusting for argparse behavior where positional args are filled in order
     # If user provides 1 arg:
     #   If it's > 12, assume it's a year.
     #   If it's <= 12, assume it's a month of current year? 
     #   Standard `cal` command behavior: `cal 2024` (year), `cal 12 2024` (month year).
-    
+
     if args.month is not None and args.year is None:
         # One argument provided
         if args.month > 12:
             year = args.month
-            month = None # Show whole year
+            month = None  # Show whole year
         else:
             year = now.year
             month = args.month
@@ -41,16 +41,17 @@ def main():
         # No arguments
         year = now.year
         month = now.month
-    
+
     # If both provided, use them as is (args.month, args.year)
-    
+
     # TextCalendar instance
     cal = HighlightCalendar(calendar.SUNDAY, now.year, now.month, now.day)
-    
+
     if month:
         print(cal.formatmonth(year, month))
     else:
         print(cal.formatyear(year))
+
 
 if __name__ == "__main__":
     main()
