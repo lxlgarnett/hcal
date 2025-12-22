@@ -55,7 +55,8 @@ def main():
     country = config.get('country')
 
     # TextCalendar instance
-    cal = HighlightCalendar(calendar.SUNDAY, now.year, now.month, now.day, country=country, highlight_today=not args.no_highlight)
+    cal = HighlightCalendar(calendar.SUNDAY, now.year, now.month, now.day, country=country,
+                            highlight_today=not args.no_highlight)
 
     if month:
         print(cal.formatmonth(year, month))
