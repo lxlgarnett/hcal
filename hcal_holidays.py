@@ -38,12 +38,12 @@ def get_holidays(country, year):
 
         # Emperor's Birthday
         if year <= 1988:
-            holidays.add((4, 29))  
+            holidays.add((4, 29))
         elif 1989 <= year <= 2018:
-            holidays.add((12, 23))  
+            holidays.add((12, 23))
         elif year >= 2020:
             holidays.add((2, 23))
-        
+
         # Simple Logic for Vernal/Autumnal Equinox (Approximate)
         # These change slightly, but for a simple CLI tool, approximations or specific year logic might be needed.
         # Keeping it simple with fixed dates for now as requested for "New Year".
