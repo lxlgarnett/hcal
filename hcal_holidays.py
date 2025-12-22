@@ -28,13 +28,15 @@ def get_holidays(country, year):
         second_monday_day = first_monday_day + 7
         holidays.add((1, second_monday_day))
 
-        holidays.add((2, 11))  # National Foundation Day
         holidays.add((4, 29))  # Showa Day
         holidays.add((5, 3))  # Constitution Memorial Day
         holidays.add((5, 4))  # Greenery Day
         holidays.add((5, 5))  # Children's Day
         holidays.add((11, 3))  # Culture Day
         holidays.add((11, 23))  # Labor Thanksgiving Day
+
+        if year >= 1967:
+            holidays.add((2, 11))  # National Foundation Day
 
         # Emperor's Birthday
         if year <= 1988:
