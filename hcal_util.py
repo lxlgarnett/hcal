@@ -36,7 +36,7 @@ class HighlightCalendar(calendar.TextCalendar):
     A custom TextCalendar that highlights the current day, weekends, and holidays.
     """
 
-    def __init__(self, firstweekday=0, today_year=None, today_month=None, today_day=None, country=None):
+    def __init__(self, firstweekday=0, today_year=None, today_month=None, today_day=None, country=None, highlight_today=True):
         """
         Initializes the HighlightCalendar.
 
@@ -46,12 +46,14 @@ class HighlightCalendar(calendar.TextCalendar):
             today_month (int): The current month.
             today_day (int): The current day.
             country (str): The country code for holiday calculations (e.g., 'Japan').
+            highlight_today (bool): Whether to highlight today's date.
         """
         super().__init__(firstweekday)
         self.today_year = today_year
         self.today_month = today_month
         self.today_day = today_day
         self.country = country
+        self.highlight_today = highlight_today
         self.curr_y = 0
         self.curr_m = 0
         self.holidays = set()
@@ -74,7 +76,8 @@ class HighlightCalendar(calendar.TextCalendar):
         if day == 0: return s
 
         # Check if this is today
-        if (self.curr_y == self.today_year and
+        if (self.highlight_today and
+                self.curr_y == self.today_year and
                 self.curr_m == self.today_month and
                 day == self.today_day):
             # White background (47), Black text (30) for contrast

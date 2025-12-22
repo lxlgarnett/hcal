@@ -10,7 +10,9 @@ def main():
     """
     Main function to parse arguments and display the calendar.
     """
-    parser = argparse.ArgumentParser(description="Show calendar on terminal")
+    parser = argparse.ArgumentParser(description="Show calendar on terminal", add_help=False)
+    parser.add_argument('--help', action='help', default=argparse.SUPPRESS, help='show this help message and exit')
+    parser.add_argument('-h', action='store_true', dest='no_highlight', help="Disable highlighting of today's date")
     parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")
     parser.add_argument('year', type=int, nargs='?', help="Year (e.g. 2023)")
 
@@ -53,7 +55,7 @@ def main():
     country = config.get('country')
 
     # TextCalendar instance
-    cal = HighlightCalendar(calendar.SUNDAY, now.year, now.month, now.day, country=country)
+    cal = HighlightCalendar(calendar.SUNDAY, now.year, now.month, now.day, country=country, highlight_today=not args.no_highlight)
 
     if month:
         print(cal.formatmonth(year, month))
