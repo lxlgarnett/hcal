@@ -18,7 +18,12 @@ def get_holidays(country, year):
 
     if country.lower() == 'japan':
         # Fixed holidays
-        holidays.add((1, 1))  # New Year's Day
+        if year >= 1955:
+            holidays.add((1, 1))  # New Year's Day
+            holidays.add((5, 3))  # Constitution Memorial Day
+            holidays.add((5, 5))  # Children's Day
+            holidays.add((11, 3))  # Culture Day
+            holidays.add((11, 23))  # Labor Thanksgiving Day
 
         # Coming of Age Day (2nd Monday of January)
         # Happy Monday System (since 2000)
@@ -28,25 +33,40 @@ def get_holidays(country, year):
         second_monday_day = first_monday_day + 7
         holidays.add((1, second_monday_day))
 
-        holidays.add((4, 29))  # Showa Day
-        holidays.add((5, 3))  # Constitution Memorial Day
-        holidays.add((5, 4))  # Greenery Day
-        holidays.add((5, 5))  # Children's Day
-        holidays.add((11, 23))  # Labor Thanksgiving Day
-
         if year >= 1967:
             holidays.add((2, 11))  # National Foundation Day
 
         # Emperor's Birthday
-        if year <= 1988:
+        if 1955 <= year <= 1988:
             holidays.add((4, 29))
         elif 1989 <= year <= 2018:
             holidays.add((12, 23))
         elif year >= 2020:
             holidays.add((2, 23))
 
-        if year >= 1955:
-            holidays.add((11, 3))  # Culture Day
+        if year >= 2007:
+            holidays.add((4, 29))  # Showa Day
+
+        # Greenery Day
+        if 1989 <= year <= 2006:
+            holidays.add((4, 29))
+        elif year >= 2007:
+            holidays.add((5, 4))
+
+        # Sports Day (Health and Sports Day)
+        if 1966 <= year <= 1999:
+            holidays.add((10, 10))
+        elif year >= 2000:
+            if year == 2020:
+                holidays.add((7, 24))
+            elif year == 2021:
+                holidays.add((7, 23))
+            else:
+                # 2nd Monday of October
+                first_oct = datetime.date(year, 10, 1)
+                first_monday_oct = 1 + (0 - first_oct.weekday() + 7) % 7
+                second_monday_oct = first_monday_oct + 7
+                holidays.add((10, second_monday_oct))
 
         # Simple Logic for Vernal/Autumnal Equinox (Approximate)
         # These change slightly, but for a simple CLI tool, approximations or specific year logic might be needed.
@@ -60,6 +80,25 @@ def get_holidays(country, year):
                 holiday_dates.add(datetime.date(year, month, day))
             except ValueError:
                 continue
+
+        # Citizens' Holiday (Kokumin no Kyujitsu) - Sandwich Rule
+        # A day between two national holidays becomes a holiday.
+        # This rule was introduced in 1985 (first effective in 1986).
+        if year >= 1986:
+            # We need to check all days of the year
+            # For efficiency, we can just check days between existing holidays
+            sorted_dates = sorted(list(holiday_dates))
+            sandwiches = []
+            for i in range(len(sorted_dates) - 1):
+                d1 = sorted_dates[i]
+                d2 = sorted_dates[i+1]
+                if (d2 - d1).days == 2:
+                    sandwich_date = d1 + datetime.timedelta(days=1)
+                    # If it's not Sunday and not already a holiday
+                    if sandwich_date.weekday() != 6:
+                        sandwiches.append(sandwich_date)
+            for s in sandwiches:
+                holiday_dates.add(s)
 
         # Iterate over original holidays to check for Sunday rule
         # We use a sorted list of the original holidays to process them in order,
