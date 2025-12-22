@@ -33,7 +33,6 @@ def get_holidays(country, year):
         holidays.add((5, 3))  # Constitution Memorial Day
         holidays.add((5, 4))  # Greenery Day
         holidays.add((5, 5))  # Children's Day
-        holidays.add((11, 3))  # Culture Day
         holidays.add((11, 23))  # Labor Thanksgiving Day
 
         # Emperor's Birthday
@@ -43,6 +42,9 @@ def get_holidays(country, year):
             holidays.add((12, 23))
         elif year >= 2020:
             holidays.add((2, 23))
+
+        if year >= 1955:
+            holidays.add((11, 3))  # Culture Day
 
         # Simple Logic for Vernal/Autumnal Equinox (Approximate)
         # These change slightly, but for a simple CLI tool, approximations or specific year logic might be needed.
