@@ -1,6 +1,33 @@
 import calendar
 import os
-from hcal_holidays import get_holidays
+import datetime
+
+
+def get_specific_monday(year, month, ordinal):
+    """
+    Finds the specific Monday of a month (e.g., 2nd Monday).
+
+    Args:
+        year (int): The year.
+        month (int): The month.
+        ordinal (int): The ordinal number of the Monday (e.g., 1 for 1st, 2 for 2nd).
+
+    Returns:
+        int: The day of the month.
+    """
+    # Get the first day of the month
+    first_day = datetime.date(year, month, 1)
+    
+    # Calculate the day of the first Monday
+    # weekday(): 0=Monday, 6=Sunday
+    # (0 - first_day.weekday() + 7) % 7 gives days to add to reach the first Monday
+    days_to_first_monday = (0 - first_day.weekday() + 7) % 7
+    first_monday_day = 1 + days_to_first_monday
+    
+    # Calculate the specific Monday
+    specific_monday_day = first_monday_day + (ordinal - 1) * 7
+    
+    return specific_monday_day
 
 
 def read_config(file_path):
@@ -88,6 +115,7 @@ class HighlightCalendar(calendar.TextCalendar):
         if self.country:
             # Refresh holidays if year changes (though formatmonth sets curr_y)
             # Optimization: We could cache this, but it's cheap to fetch for now.
+            from hcal_holidays import get_holidays
             self.holidays = get_holidays(self.country, self.curr_y)
 
             if (self.curr_m, day) in self.holidays:

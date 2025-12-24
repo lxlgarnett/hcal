@@ -1,4 +1,5 @@
 import datetime
+from hcal_util import get_specific_monday
 
 
 def get_holidays(country, year):
@@ -27,11 +28,7 @@ def get_holidays(country, year):
 
         # Coming of Age Day (2nd Monday of January)
         # Happy Monday System (since 2000)
-        first_jan = datetime.date(year, 1, 1)
-        # weekday(): 0=Mon, 6=Sun
-        first_monday_day = 1 + (0 - first_jan.weekday() + 7) % 7
-        second_monday_day = first_monday_day + 7
-        holidays.add((1, second_monday_day))
+        holidays.add((1, get_specific_monday(year, 1, 2)))
 
         if year >= 1967:
             holidays.add((2, 11))  # National Foundation Day
@@ -63,10 +60,7 @@ def get_holidays(country, year):
                 holidays.add((7, 23))
             else:
                 # 2nd Monday of October
-                first_oct = datetime.date(year, 10, 1)
-                first_monday_oct = 1 + (0 - first_oct.weekday() + 7) % 7
-                second_monday_oct = first_monday_oct + 7
-                holidays.add((10, second_monday_oct))
+                holidays.add((10, get_specific_monday(year, 10, 2)))
 
         # Simple Logic for Vernal/Autumnal Equinox (Approximate)
         # These change slightly, but for a simple CLI tool, approximations or specific year logic might be needed.
