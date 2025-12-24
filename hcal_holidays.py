@@ -1,6 +1,33 @@
 import datetime
 
 
+def get_specific_monday(year, month, ordinal):
+    """
+    Finds the specific Monday of a month (e.g., 2nd Monday).
+
+    Args:
+        year (int): The year.
+        month (int): The month.
+        ordinal (int): The ordinal number of the Monday (e.g., 1 for 1st, 2 for 2nd).
+
+    Returns:
+        int: The day of the month.
+    """
+    # Get the first day of the month
+    first_day = datetime.date(year, month, 1)
+
+    # Calculate the day of the first Monday
+    # weekday(): 0=Monday, 6=Sunday
+    # (0 - first_day.weekday() + 7) % 7 gives days to add to reach the first Monday
+    days_to_first_monday = (0 - first_day.weekday() + 7) % 7
+    first_monday_day = 1 + days_to_first_monday
+
+    # Calculate the specific Monday
+    specific_monday_day = first_monday_day + (ordinal - 1) * 7
+
+    return specific_monday_day
+
+
 def get_holidays(country, year):
     """
     Returns a set of (month, day) tuples for the holidays of the specified country and year.
@@ -27,11 +54,7 @@ def get_holidays(country, year):
 
         # Coming of Age Day (2nd Monday of January)
         # Happy Monday System (since 2000)
-        first_jan = datetime.date(year, 1, 1)
-        # weekday(): 0=Mon, 6=Sun
-        first_monday_day = 1 + (0 - first_jan.weekday() + 7) % 7
-        second_monday_day = first_monday_day + 7
-        holidays.add((1, second_monday_day))
+        holidays.add((1, get_specific_monday(year, 1, 2)))
 
         if year >= 1967:
             holidays.add((2, 11))  # National Foundation Day
@@ -63,13 +86,11 @@ def get_holidays(country, year):
                 holidays.add((7, 23))
             else:
                 # 2nd Monday of October
-                first_oct = datetime.date(year, 10, 1)
-                first_monday_oct = 1 + (0 - first_oct.weekday() + 7) % 7
-                second_monday_oct = first_monday_oct + 7
-                holidays.add((10, second_monday_oct))
+                holidays.add((10, get_specific_monday(year, 10, 2)))
 
         # Simple Logic for Vernal/Autumnal Equinox (Approximate)
-        # These change slightly, but for a simple CLI tool, approximations or specific year logic might be needed.
+        # These change slightly, but for a simple CLI tool,
+        # approximations or specific year logic might be needed.
         # Keeping it simple with fixed dates for now as requested for "New Year".
 
         # Substitute Holiday Logic
@@ -90,10 +111,10 @@ def get_holidays(country, year):
             sorted_dates = sorted(list(holiday_dates))
             sandwiches = []
             for i in range(len(sorted_dates) - 1):
-                d1 = sorted_dates[i]
-                d2 = sorted_dates[i+1]
-                if (d2 - d1).days == 2:
-                    sandwich_date = d1 + datetime.timedelta(days=1)
+                date_1 = sorted_dates[i]
+                date_2 = sorted_dates[i + 1]
+                if (date_2 - date_1).days == 2:
+                    sandwich_date = date_1 + datetime.timedelta(days=1)
                     # If it's not Sunday and not already a holiday
                     if sandwich_date.weekday() != 6:
                         sandwiches.append(sandwich_date)
@@ -104,7 +125,8 @@ def get_holidays(country, year):
         # We use a sorted list of the original holidays to process them in order,
         # though strictly speaking the order doesn't change the outcome of the logic
         # as long as we check against the full set of holidays (including previously added substitutes?
-        # No, usually substitutes don't chain from other substitutes, but they do chain from fixed holidays overlapping).
+        # No, usually substitutes don't chain from other substitutes,
+        # but they do chain from fixed holidays overlapping).
         # Actually, if we have Sun (Holiday 1), Mon (Holiday 2), the substitute for Holiday 1 goes to Tue.
         # If Tue was also a fixed holiday, it would go to Wed.
 

@@ -6,6 +6,8 @@ A simple command-line calendar utility written in Python that highlights the cur
 
 - Displays a formatted calendar for any month/year.
 - **Highlights the current date** with a white background for quick focus.
+- **Colors weekends:** Saturdays in blue and Sundays in red.
+- **Supports Holidays:** Highlights holidays in red (currently supports Japan).
 - Supports standard `cal` style arguments.
 
 ## Usage
@@ -30,6 +32,18 @@ Run for a specific month and year:
 Run for a whole year:
 ```bash
 ./hcal 2026
+```
+
+### Configuration
+
+You can configure `hcal` by creating a `~/.hcalrc` file.
+
+**Supported options:**
+- `country`: Set to `Japan` to enable Japanese holiday highlighting.
+
+**Example `~/.hcalrc`:**
+```ini
+country=Japan
 ```
 
 ## Docker
