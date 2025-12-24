@@ -1,6 +1,5 @@
 import calendar
 import os
-import datetime
 from hcal_holidays import get_holidays
 
 
@@ -102,19 +101,19 @@ class HighlightCalendar(calendar.TextCalendar):
 
         return s
 
-    def formatmonth(self, theyear, themonth, w=0, l=0):
+    def formatmonth(self, the_year, the_month, w=0, l=0):
         """
         Returns a formatted month string.
 
         Args:
-            theyear (int): The year.
-            themonth (int): The month.
+            the_year (int): The year.
+            the_month (int): The month.
             w (int): Width of date columns.
             l (int): Number of newlines between weeks.
 
         Returns:
             str: The formatted month string.
         """
-        self.curr_y = theyear
-        self.curr_m = themonth
-        return super().formatmonth(theyear, themonth, w, l)
+        self.curr_y = the_year
+        self.curr_m = the_month
+        return super().formatmonth(the_year, the_month, w, l)
