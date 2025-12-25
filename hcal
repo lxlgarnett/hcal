@@ -84,6 +84,8 @@ def main():
                         help="Disable highlighting of today's date")
     parser.add_argument('-3', action='store_true', dest='three_months',
                         help='Display previous, current and next month')
+    parser.add_argument('-y', dest='year_option', type=int, nargs='?', const=-1,
+                        help='Display a calendar for the specified year (default: current year)')
     parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")
     parser.add_argument('year', type=int, nargs='?', help="Year (e.g. 2023)")
 
@@ -95,7 +97,13 @@ def main():
     month = args.month
 
     # Logic for month/year inference
-    if args.month is not None and args.year is None:
+    if args.year_option is not None:
+        if args.year_option == -1:
+            year = now.year
+        else:
+            year = args.year_option
+        month = None
+    elif args.month is not None and args.year is None:
         if args.month > 12:
             year = args.month
             month = None  # Show whole year
