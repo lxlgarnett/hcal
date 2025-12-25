@@ -91,7 +91,7 @@ class HighlightCalendar(calendar.TextCalendar):
             self.holidays = get_holidays(self.country, self.curr_y)
 
             if (self.curr_m, day) in self.holidays:
-                return f"\033[31m{s}\033[0m"  # Red
+                return f"\033[32m{s}\033[0m"  # Green
 
         # Weekend coloring
         if weekday == calendar.SUNDAY:
