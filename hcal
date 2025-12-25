@@ -73,6 +73,37 @@ def display_three_months(cal, year, month):
         print(f"{lines_p[i]}  {lines_c[i]}  {lines_n[i]}")
 
 
+def display_year(cal, year):
+    """Displays the whole year calendar with 3 months per row."""
+    # Print year centered
+    # Standard width for 3 months: 20*3 + 2*2 = 64
+    print(str(year).center(64))
+    print()  # Empty line
+
+    for i in range(1, 13, 3):
+        # Current block of 3 months
+        months = [i, i + 1, i + 2]
+
+        # Get lines for each month
+        # Use get_month_lines which uses cal.formatmonth (handles highlighting)
+        block_lines = [get_month_lines(cal, year, m) for m in months]
+
+        # Normalize height
+        max_h = max(len(lines) for lines in block_lines)
+
+        # Pad all months to max_h
+        block_lines = [pad_height(lines, max_h) for lines in block_lines]
+
+        # Print the block
+        for row in range(max_h):
+            # Join month lines with 2 spaces
+            print("  ".join(block_lines[col][row] for col in range(len(months))))
+
+        # Add empty line between blocks of months, but not after the last block
+        if i + 2 < 12:
+            print()
+
+
 def main():
     """
     Main function to parse arguments and display the calendar.
@@ -133,7 +164,7 @@ def main():
         if month:
             print(cal.formatmonth(year, month))
         else:
-            print(cal.formatyear(year))
+            display_year(cal, year)
 
 
 if __name__ == "__main__":
