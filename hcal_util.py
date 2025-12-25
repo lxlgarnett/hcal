@@ -29,8 +29,8 @@ def read_config(file_path):
         return config
 
     try:
-        with open(expanded_path, 'r', encoding='utf-8') as f:
-            for line in f:
+        with open(expanded_path, 'r', encoding='utf-8') as config_file:
+            for line in config_file:
                 line = line.strip()
                 if not line or line.startswith('#'):
                     continue
@@ -38,8 +38,8 @@ def read_config(file_path):
                 if '=' in line:
                     key, value = line.split('=', 1)
                     config[key.strip()] = value.strip()
-    except (OSError, IOError) as e:
-        print(f"Error reading config file {expanded_path}: {e}")
+    except (OSError, IOError) as error:
+        print(f"Error reading config file {expanded_path}: {error}")
 
     return config
 
@@ -61,6 +61,7 @@ class HighlightCalendar(calendar.TextCalendar):
             highlight_today (bool): Whether to highlight today's date.
             holiday_color (str): The color name for holidays.
         """
+        # pylint: disable=too-many-arguments
         super().__init__(firstweekday)
         self.today = today
         self.country = country
@@ -84,9 +85,9 @@ class HighlightCalendar(calendar.TextCalendar):
         Returns:
             str: The formatted day string.
         """
-        s = super().formatday(day, weekday, width)
+        day_str = super().formatday(day, weekday, width)
         if day == 0:
-            return s
+            return day_str
 
         # Check if this is today
         if (self.highlight_today and self.today and
@@ -94,7 +95,7 @@ class HighlightCalendar(calendar.TextCalendar):
                 self.curr_m == self.today.month and
                 day == self.today.day):
             # White background (47), Black text (30) for contrast
-            return f"\033[47;30m{s}\033[0m"
+            return f"\033[47;30m{day_str}\033[0m"
 
         # Check for Holidays
         if self.country:
@@ -103,15 +104,15 @@ class HighlightCalendar(calendar.TextCalendar):
             self.holidays = get_holidays(self.country, self.curr_y)
 
             if (self.curr_m, day) in self.holidays:
-                return f"{self.holiday_color_code}{s}\033[0m"
+                return f"{self.holiday_color_code}{day_str}\033[0m"
 
         # Weekend coloring
         if weekday == calendar.SUNDAY:
-            return f"\033[31m{s}\033[0m"  # Red
+            return f"\033[31m{day_str}\033[0m"  # Red
         if weekday == calendar.SATURDAY:
-            return f"\033[34m{s}\033[0m"  # Blue
+            return f"\033[34m{day_str}\033[0m"  # Blue
 
-        return s
+        return day_str
 
     def formatmonth(self, theyear, themonth, w=0, l=0):
         """
