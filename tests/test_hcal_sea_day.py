@@ -1,11 +1,11 @@
 """
 Tests for Sea Day (Marine Day) in Japan.
 """
-import datetime
 import unittest
 from hcal_holidays import get_holidays
 
 class TestHcalSeaDay(unittest.TestCase):
+    """Tests for Sea Day functionality."""
     def test_sea_day_before_1996(self):
         """Sea Day did not exist before 1996."""
         holidays = get_holidays('Japan', 1995)

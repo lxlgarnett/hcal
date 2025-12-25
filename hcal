@@ -37,6 +37,42 @@ def get_month_lines(cal, year, month):
     return padded
 
 
+def add_months(year, month, delta):
+    """Calculates a new year and month given a delta."""
+    m_new = month + delta
+    y_new = year + (m_new - 1) // 12
+    m_new = (m_new - 1) % 12 + 1
+    return y_new, m_new
+
+
+def pad_height(lines, height):
+    """Pads a list of lines with empty lines to match the specified height."""
+    while len(lines) < height:
+        lines.append(' ' * 20)
+    return lines
+
+
+def display_three_months(cal, year, month):
+    """Displays previous, current, and next month side-by-side."""
+    py, pm = add_months(year, month, -1)
+    ny, nm = add_months(year, month, 1)
+
+    lines_p = get_month_lines(cal, py, pm)
+    lines_c = get_month_lines(cal, year, month)
+    lines_n = get_month_lines(cal, ny, nm)
+
+    # Normalize height
+    max_h = max(len(lines_p), len(lines_c), len(lines_n))
+
+    lines_p = pad_height(lines_p, max_h)
+    lines_c = pad_height(lines_c, max_h)
+    lines_n = pad_height(lines_n, max_h)
+
+    # Join with 2 spaces gap
+    for i in range(max_h):
+        print(f"{lines_p[i]}  {lines_c[i]}  {lines_n[i]}")
+
+
 def main():
     """
     Main function to parse arguments and display the calendar.
@@ -80,38 +116,10 @@ def main():
 
     if args.three_months:
         if month is None:
-             print("hcal: -3 option not valid with year", file=sys.stderr)
-             return
+            print("hcal: -3 option not valid with year", file=sys.stderr)
+            return
 
-        # Calculate prev and next
-        def add_months(y, m, delta):
-            m_new = m + delta
-            y_new = y + (m_new - 1) // 12
-            m_new = (m_new - 1) % 12 + 1
-            return y_new, m_new
-
-        py, pm = add_months(year, month, -1)
-        ny, nm = add_months(year, month, 1)
-
-        lines_p = get_month_lines(cal, py, pm)
-        lines_c = get_month_lines(cal, year, month)
-        lines_n = get_month_lines(cal, ny, nm)
-
-        # Normalize height
-        max_h = max(len(lines_p), len(lines_c), len(lines_n))
-        
-        def pad_height(lines, h):
-            while len(lines) < h:
-                lines.append(' ' * 20)
-            return lines
-        
-        lines_p = pad_height(lines_p, max_h)
-        lines_c = pad_height(lines_c, max_h)
-        lines_n = pad_height(lines_n, max_h)
-        
-        # Join with 2 spaces gap
-        for i in range(max_h):
-            print(f"{lines_p[i]}  {lines_c[i]}  {lines_n[i]}")
+        display_three_months(cal, year, month)
 
     else:
         if month:

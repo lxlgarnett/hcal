@@ -5,6 +5,7 @@ import unittest
 from hcal_holidays import get_holidays
 
 class TestHcalMountainDay(unittest.TestCase):
+    """Tests for Mountain Day functionality."""
     def test_mountain_day_before_2016(self):
         """Mountain Day did not exist before 2016."""
         holidays = get_holidays('Japan', 2015)
@@ -26,10 +27,11 @@ class TestHcalMountainDay(unittest.TestCase):
         holidays = get_holidays('Japan', 2021)
         self.assertIn((8, 8), holidays)
         self.assertNotIn((8, 11), holidays)
-        
+
         # August 8, 2021 was a Sunday.
         # Aug 9 (Monday) should be a substitute holiday.
         self.assertIn((8, 9), holidays)
+
 
     def test_mountain_day_recent_years(self):
         """Test recent years."""
