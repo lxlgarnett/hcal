@@ -1,3 +1,6 @@
+"""
+Tests for Culture Day calculations.
+"""
 import unittest
 from hcal_holidays import get_holidays
 

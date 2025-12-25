@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+"""
+hcal - A command-line calendar with highlighting and holiday support.
+"""
 
 import argparse
 import calendar
 import datetime
-from hcal_util import HighlightCalendar
+from hcal_util import HighlightCalendar, read_config
 
 
 def main():
@@ -11,8 +14,10 @@ def main():
     Main function to parse arguments and display the calendar.
     """
     parser = argparse.ArgumentParser(description="Show calendar on terminal", add_help=False)
-    parser.add_argument('--help', action='help', default=argparse.SUPPRESS, help='show this help message and exit')
-    parser.add_argument('-h', action='store_true', dest='no_highlight', help="Disable highlighting of today's date")
+    parser.add_argument('--help', action='help', default=argparse.SUPPRESS,
+                        help='show this help message and exit')
+    parser.add_argument('-h', action='store_true', dest='no_highlight',
+                        help="Disable highlighting of today's date")
     parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")
     parser.add_argument('year', type=int, nargs='?', help="Year (e.g. 2023)")
 
@@ -31,7 +36,7 @@ def main():
     # Adjusting for argparse behavior where positional args are filled in order
     # If user provides 1 arg:
     #   If it's > 12, assume it's a year.
-    #   If it's <= 12, assume it's a month of current year? 
+    #   If it's <= 12, assume it's a month of current year?
     #   Standard `cal` command behavior: `cal 2024` (year), `cal 12 2024` (month year).
 
     if args.month is not None and args.year is None:
@@ -50,12 +55,11 @@ def main():
     # If both provided, use them as is (args.month, args.year)
 
     # Read config
-    from hcal_util import read_config
     config = read_config("~/.hcalrc")
     country = config.get('country')
 
     # TextCalendar instance
-    cal = HighlightCalendar(calendar.SUNDAY, now.year, now.month, now.day, country=country,
+    cal = HighlightCalendar(calendar.SUNDAY, today=now.date(), country=country,
                             highlight_today=not args.no_highlight)
 
     if month:

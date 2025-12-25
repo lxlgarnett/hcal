@@ -1,3 +1,6 @@
+"""
+Unit tests for hcal_holidays module.
+"""
 import unittest
 from hcal_holidays import get_holidays, get_specific_monday
 
@@ -8,6 +11,9 @@ class TestJapanHolidays(unittest.TestCase):
     """
 
     def test_get_specific_monday(self):
+        """
+        Test the get_specific_monday utility function.
+        """
         # 2023 January: 1st is Sunday.
         # 1st Monday: 2nd
         # 2nd Monday: 9th
@@ -84,7 +90,8 @@ class TestJapanHolidays(unittest.TestCase):
         """
         holidays_1995 = get_holidays('Japan', 1995)
         self.assertIn((12, 23), holidays_1995, "December 23 should be Emperor's Birthday in 1995")
-        self.assertNotIn((2, 23), holidays_1995, "February 23 should not be Emperor's Birthday in 1995")
+        self.assertNotIn((2, 23), holidays_1995,
+                         "February 23 should not be Emperor's Birthday in 1995")
 
     def test_no_emperors_birthday_in_2019(self):
         """
@@ -100,7 +107,8 @@ class TestJapanHolidays(unittest.TestCase):
         """
         holidays_2021 = get_holidays('Japan', 2021)
         self.assertIn((2, 23), holidays_2021, "February 23 should be Emperor's Birthday in 2021")
-        self.assertNotIn((12, 23), holidays_2021, "December 23 should not be Emperor's Birthday in 2021")
+        self.assertNotIn((12, 23), holidays_2021,
+                         "December 23 should not be Emperor's Birthday in 2021")
 
 
 if __name__ == '__main__':
