@@ -5,6 +5,16 @@ import calendar
 import os
 from hcal_holidays import get_holidays
 
+ANSI_COLORS = {
+    'red': '\033[31m',
+    'green': '\033[32m',
+    'blue': '\033[34m',
+    'yellow': '\033[33m',
+    'magenta': '\033[35m',
+    'cyan': '\033[36m',
+    'white': '\033[37m',
+}
+
 
 def read_config(file_path):
     """
@@ -40,7 +50,7 @@ class HighlightCalendar(calendar.TextCalendar):
     """
 
     def __init__(self, firstweekday=0, today=None, country=None,
-                 highlight_today=True):
+                 highlight_today=True, holiday_color='red'):
         """
         Initializes the HighlightCalendar.
 
@@ -49,6 +59,7 @@ class HighlightCalendar(calendar.TextCalendar):
             today (datetime.date): The current date.
             country (str): The country code for holiday calculations (e.g., 'Japan').
             highlight_today (bool): Whether to highlight today's date.
+            holiday_color (str): The color name for holidays.
         """
         super().__init__(firstweekday)
         self.today = today
@@ -57,6 +68,7 @@ class HighlightCalendar(calendar.TextCalendar):
         self.curr_y = 0
         self.curr_m = 0
         self.holidays = set()
+        self.holiday_color_code = ANSI_COLORS.get(holiday_color.lower(), ANSI_COLORS['red'])
 
     def formatday(self, day, weekday, width):
         """
@@ -91,7 +103,7 @@ class HighlightCalendar(calendar.TextCalendar):
             self.holidays = get_holidays(self.country, self.curr_y)
 
             if (self.curr_m, day) in self.holidays:
-                return f"\033[32m{s}\033[0m"  # Green
+                return f"{self.holiday_color_code}{s}\033[0m"
 
         # Weekend coloring
         if weekday == calendar.SUNDAY:

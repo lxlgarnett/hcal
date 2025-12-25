@@ -148,10 +148,12 @@ def main():
     # Read config
     config = read_config("~/.hcalrc")
     country = config.get('country')
+    holiday_color = config.get('holiday_color', 'red')
 
     # TextCalendar instance
     cal = HighlightCalendar(calendar.SUNDAY, today=now.date(), country=country,
-                            highlight_today=not args.no_highlight)
+                            highlight_today=not args.no_highlight,
+                            holiday_color=holiday_color)
 
     if args.three_months:
         if month is None:
