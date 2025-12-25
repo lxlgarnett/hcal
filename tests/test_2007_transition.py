@@ -1,25 +1,35 @@
+"""
+Tests for holiday transitions around the year 2007.
+"""
 import unittest
 from hcal_holidays import get_holidays
 
 class Test2007Transition(unittest.TestCase):
+    """
+    Test cases for holiday transitions in 2007.
+    """
     def test_2007_holidays(self):
+        """Test holidays in 2007."""
         holidays_2007 = get_holidays('Japan', 2007)
-        
+
         # April 29 should be Showa Day
         self.assertIn((4, 29), holidays_2007, "Apr 29 should be a holiday (Showa Day) in 2007")
-        
+
         # May 4 should be Greenery Day
         self.assertIn((5, 4), holidays_2007, "May 4 should be a holiday (Greenery Day) in 2007")
 
     def test_2006_holidays(self):
+        """Test holidays in 2006."""
         holidays_2006 = get_holidays('Japan', 2006)
         # April 29 was Greenery Day
         self.assertIn((4, 29), holidays_2006, "Apr 29 should be a holiday (Greenery Day) in 2006")
         # May 4 was Citizens' Holiday
-        self.assertIn((5, 4), holidays_2006, "May 4 should be a holiday (Citizens' Holiday) in 2006")
+        self.assertIn((5, 4), holidays_2006,
+                      "May 4 should be a holiday (Citizens' Holiday) in 2006")
 
     def test_1986_holidays(self):
-        holidays_1986 = get_holidays('Japan', 1986)
+        """Test holidays in 1986 and sandwich rule logic."""
+        # holidays_1986 = get_holidays('Japan', 1986)
         # May 4 should be a holiday (first year of sandwich rule)
         # May 3 (Sat), May 4 (Sun? no), May 5 (Mon)
         # Wait, May 4, 1986:
@@ -35,7 +45,8 @@ class Test2007Transition(unittest.TestCase):
         # 1988-05-04 is Wednesday. Between May 3 (Tue) and May 5 (Thu).
         # 1988-05-04 should be a Citizens' Holiday.
         holidays_1988 = get_holidays('Japan', 1988)
-        self.assertIn((5, 4), holidays_1988, "May 4 should be a holiday (Citizens' Holiday) in 1988")
+        self.assertIn((5, 4), holidays_1988,
+                      "May 4 should be a holiday (Citizens' Holiday) in 1988")
 
 
 if __name__ == '__main__':

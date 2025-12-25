@@ -1,3 +1,6 @@
+"""
+Integration tests for the hcal command-line tool.
+"""
 import subprocess
 import datetime
 import sys
@@ -15,11 +18,12 @@ def test_hcal_highlighting():
 
     # Run hcal for current month/year
     cmd = [sys.executable, "./hcal", str(month), str(year)]
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
     # Expected ANSI code sequence for today
     # Note: TextCalendar pads single digit days with space.
-    # formatday width is usually 2 or 3 depending on context, but here standard cal is 2 chars + 1 space.
+    # formatday width is usually 2 or 3 depending on context,
+    # but here standard cal is 2 chars + 1 space.
     # The highlighted string is `\033[47;30m{s}\033[0m`
 
     # We search for the start of the sequence
@@ -59,7 +63,7 @@ def test_hcal_no_highlighting_wrong_month():
         year = now.year
 
     cmd = [sys.executable, "./hcal", str(month), str(year)]
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
     ansi_start = "\033[47;30m"
     if ansi_start in result.stdout:
@@ -79,7 +83,7 @@ def test_hcal_colors():
     # Dec 7 is Sunday (Red).
 
     cmd = [sys.executable, "./hcal", "12", "2025"]
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
     output = result.stdout
 
     # Check Header Color (Bold Cyan) - REMOVED

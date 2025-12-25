@@ -1,3 +1,6 @@
+"""
+Utility functions and classes for hcal.
+"""
 import calendar
 import os
 from hcal_holidays import get_holidays
@@ -16,7 +19,7 @@ def read_config(file_path):
         return config
 
     try:
-        with open(expanded_path, 'r') as f:
+        with open(expanded_path, 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.strip()
                 if not line or line.startswith('#'):
@@ -25,7 +28,7 @@ def read_config(file_path):
                 if '=' in line:
                     key, value = line.split('=', 1)
                     config[key.strip()] = value.strip()
-    except Exception as e:
+    except (OSError, IOError) as e:
         print(f"Error reading config file {expanded_path}: {e}")
 
     return config
@@ -36,23 +39,19 @@ class HighlightCalendar(calendar.TextCalendar):
     A custom TextCalendar that highlights the current day, weekends, and holidays.
     """
 
-    def __init__(self, firstweekday=0, today_year=None, today_month=None, today_day=None, country=None,
+    def __init__(self, firstweekday=0, today=None, country=None,
                  highlight_today=True):
         """
         Initializes the HighlightCalendar.
 
         Args:
             firstweekday (int): The first day of the week (0=Monday, 6=Sunday).
-            today_year (int): The current year.
-            today_month (int): The current month.
-            today_day (int): The current day.
+            today (datetime.date): The current date.
             country (str): The country code for holiday calculations (e.g., 'Japan').
             highlight_today (bool): Whether to highlight today's date.
         """
         super().__init__(firstweekday)
-        self.today_year = today_year
-        self.today_month = today_month
-        self.today_day = today_day
+        self.today = today
         self.country = country
         self.highlight_today = highlight_today
         self.curr_y = 0
@@ -74,13 +73,14 @@ class HighlightCalendar(calendar.TextCalendar):
             str: The formatted day string.
         """
         s = super().formatday(day, weekday, width)
-        if day == 0: return s
+        if day == 0:
+            return s
 
         # Check if this is today
-        if (self.highlight_today and
-                self.curr_y == self.today_year and
-                self.curr_m == self.today_month and
-                day == self.today_day):
+        if (self.highlight_today and self.today and
+                self.curr_y == self.today.year and
+                self.curr_m == self.today.month and
+                day == self.today.day):
             # White background (47), Black text (30) for contrast
             return f"\033[47;30m{s}\033[0m"
 
@@ -96,24 +96,24 @@ class HighlightCalendar(calendar.TextCalendar):
         # Weekend coloring
         if weekday == calendar.SUNDAY:
             return f"\033[31m{s}\033[0m"  # Red
-        elif weekday == calendar.SATURDAY:
+        if weekday == calendar.SATURDAY:
             return f"\033[34m{s}\033[0m"  # Blue
 
         return s
 
-    def formatmonth(self, the_year, the_month, w=0, l=0):
+    def formatmonth(self, theyear, themonth, w=0, l=0):
         """
         Returns a formatted month string.
 
         Args:
-            the_year (int): The year.
-            the_month (int): The month.
+            theyear (int): The year.
+            themonth (int): The month.
             w (int): Width of date columns.
             l (int): Number of newlines between weeks.
 
         Returns:
             str: The formatted month string.
         """
-        self.curr_y = the_year
-        self.curr_m = the_month
-        return super().formatmonth(the_year, the_month, w, l)
+        self.curr_y = theyear
+        self.curr_m = themonth
+        return super().formatmonth(theyear, themonth, w, l)

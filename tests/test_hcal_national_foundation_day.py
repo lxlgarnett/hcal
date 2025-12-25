@@ -1,3 +1,6 @@
+"""
+Tests for National Foundation Day calculations.
+"""
 import unittest
 from hcal_holidays import get_holidays
 
@@ -11,7 +14,8 @@ class TestJapanNationalFoundationDay(unittest.TestCase):
         Test that National Foundation Day is not observed before 1967.
         """
         holidays_1966 = get_holidays('Japan', 1966)
-        self.assertNotIn((2, 11), holidays_1966, "National Foundation Day should not be observed in 1966")
+        self.assertNotIn((2, 11), holidays_1966,
+                         "National Foundation Day should not be observed in 1966")
 
     def test_national_foundation_day_from_1967(self):
         """
