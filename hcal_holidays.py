@@ -68,6 +68,17 @@ def _get_japan_variable_holidays(year):
     elif year >= 2020:
         holidays.add((2, 23))
 
+    # Marine Day (Sea Day)
+    if 1996 <= year <= 2002:
+        holidays.add((7, 20))
+    elif year >= 2003:
+        if year == 2020:
+            holidays.add((7, 23))
+        elif year == 2021:
+            holidays.add((7, 22))
+        else:
+            holidays.add((7, get_specific_monday(year, 7, 3)))
+
     # Greenery Day
     if 1989 <= year <= 2006:
         holidays.add((4, 29))
