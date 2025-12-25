@@ -1,8 +1,12 @@
+"""
+Tests for the -y option of hcal.
+"""
 import subprocess
 import sys
 import datetime
 
 def test_hcal_y_flag_current_year():
+    """Test that -y flag without arguments shows the current year."""
     now = datetime.datetime.now()
     year = now.year
     cmd = [sys.executable, "./hcal", "-y"]
@@ -18,6 +22,7 @@ def test_hcal_y_flag_current_year():
         sys.exit(1)
 
 def test_hcal_y_flag_specific_year():
+    """Test that -y flag with a specific year argument shows that year."""
     year = 2030
     cmd = [sys.executable, "./hcal", "-y", str(year)]
     result = subprocess.run(cmd, capture_output=True, text=True, check=True)
