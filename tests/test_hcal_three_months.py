@@ -52,6 +52,43 @@ def test_hcal_three_months():
         sys.exit(1)
 
 
+import re
+
+def strip_ansi(text):
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    return ansi_escape.sub('', text)
+
+def test_hcal_three_months_alignment():
+    """
+    Test that 'hcal -3' output lines are properly padded to 64 chars visually.
+    20 + 2 + 20 + 2 + 20 = 64.
+    """
+    cmd = [sys.executable, "./hcal", "-3", "1", "2025"]
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    lines = result.stdout.split('\n')
+    
+    for line in lines:
+        if not line:
+            continue
+        vis_len = len(strip_ansi(line))
+        # Title line might be different? 
+        # Title: "   December 2024        January 2025         February 2025    "
+        # It should also be padded? 
+        # Standard cal -3 pads title line?
+        # My implementation: `print(f"{lines_p[i]}  {lines_c[i]}  {lines_n[i]}")`
+        # Titles are processed same as other lines.
+        
+        # However, trailing spaces might be trimmed by terminal or editors?
+        # But `hcal` outputs them.
+        
+        if vis_len != 64:
+             # Just warn or fail?
+             # If it's the last line of output, maybe it's empty? Checked `if not line`.
+             print(f"FAIL: Line length {vis_len} != 64")
+             print(f"Line: '{line}'")
+             sys.exit(1)
+    print("PASS: Alignment check passed (all lines 64 chars wide).")
+
 def test_hcal_three_months_default():
     """
     Test 'hcal -3' without args (defaults to current month).
@@ -94,5 +131,6 @@ def test_hcal_three_months_error_on_year():
         
 if __name__ == "__main__":
     test_hcal_three_months()
+    test_hcal_three_months_alignment()
     test_hcal_three_months_default()
     test_hcal_three_months_error_on_year()
