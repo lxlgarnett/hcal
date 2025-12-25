@@ -52,9 +52,12 @@ def get_holidays(country, year):
             holidays.add((11, 3))  # Culture Day
             holidays.add((11, 23))  # Labor Thanksgiving Day
 
-        # Coming of Age Day (2nd Monday of January)
-        # Happy Monday System (since 2000)
-        holidays.add((1, get_specific_monday(year, 1, 2)))
+        # Coming of Age Day
+        if year >= 2000:
+            # Happy Monday System (2nd Monday of January)
+            holidays.add((1, get_specific_monday(year, 1, 2)))
+        else:
+            holidays.add((1, 15))
 
         if year >= 1967:
             holidays.add((2, 11))  # National Foundation Day
