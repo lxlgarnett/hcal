@@ -27,8 +27,8 @@ def pad_line(line, width=20):
 
 def get_month_lines(cal, year, month):
     """Returns a list of padded strings for the month."""
-    s = cal.formatmonth(year, month)
-    lines = s.split('\n')
+    month_str = cal.formatmonth(year, month)
+    lines = month_str.split('\n')
     # Remove empty last line if exists
     if lines and not lines[-1]:
         lines.pop()
@@ -54,12 +54,12 @@ def pad_height(lines, height):
 
 def display_three_months(cal, year, month):
     """Displays previous, current, and next month side-by-side."""
-    py, pm = add_months(year, month, -1)
-    ny, nm = add_months(year, month, 1)
+    prev_year, prev_month = add_months(year, month, -1)
+    next_year, next_month = add_months(year, month, 1)
 
-    lines_p = get_month_lines(cal, py, pm)
+    lines_p = get_month_lines(cal, prev_year, prev_month)
     lines_c = get_month_lines(cal, year, month)
-    lines_n = get_month_lines(cal, ny, nm)
+    lines_n = get_month_lines(cal, next_year, next_month)
 
     # Normalize height
     max_h = max(len(lines_p), len(lines_c), len(lines_n))
@@ -148,10 +148,12 @@ def main():
     # Read config
     config = read_config("~/.hcalrc")
     country = config.get('country')
+    holiday_color = config.get('holiday_color', 'red')
 
     # TextCalendar instance
     cal = HighlightCalendar(calendar.SUNDAY, today=now.date(), country=country,
-                            highlight_today=not args.no_highlight)
+                            highlight_today=not args.no_highlight,
+                            holiday_color=holiday_color)
 
     if args.three_months:
         if month is None:
