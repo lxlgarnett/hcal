@@ -10,7 +10,8 @@ import unittest
 class TestHcalThreeMonths(unittest.TestCase):
     """Test suite for 'hcal -3' functionality."""
 
-    def strip_ansi(self, text):
+    @staticmethod
+    def strip_ansi(text):
         """Helper to strip ANSI escape codes."""
         ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
         return ansi_escape.sub('', text)
