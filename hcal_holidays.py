@@ -103,6 +103,17 @@ def _get_sports_day(year):
     return None
 
 
+def _get_mountain_day(year):
+    """Returns Mountain Day."""
+    if year < 2016:
+        return None
+    if year == 2020:
+        return (8, 10)
+    if year == 2021:
+        return (8, 8)
+    return (8, 11)
+
+
 def _get_japan_variable_holidays(year):
     """Returns a set of variable date holidays for Japan."""
     holidays = set()
@@ -119,6 +130,11 @@ def _get_japan_variable_holidays(year):
     marine_day = _get_marine_day(year)
     if marine_day:
         holidays.add(marine_day)
+
+    # Mountain Day
+    mountain_day = _get_mountain_day(year)
+    if mountain_day:
+        holidays.add(mountain_day)
 
     # Greenery Day
     greenery_day = _get_greenery_day(year)
