@@ -50,40 +50,101 @@ def _get_japan_fixed_holidays(year):
     return holidays
 
 
+def _get_coming_of_age_day(year):
+    """Returns Coming of Age Day."""
+    if year >= 2000:
+        return (1, get_specific_monday(year, 1, 2))
+    return (1, 15)
+
+
+def _get_emperor_birthday(year):
+    """Returns Emperor's Birthday."""
+    if 1955 <= year <= 1988:
+        return (4, 29)
+    if 1989 <= year <= 2018:
+        return (12, 23)
+    if year >= 2020:
+        return (2, 23)
+    return None
+
+
+def _get_marine_day(year):
+    """Returns Marine Day (Sea Day)."""
+    if 1996 <= year <= 2002:
+        return (7, 20)
+    if year >= 2003:
+        if year == 2020:
+            return (7, 23)
+        if year == 2021:
+            return (7, 22)
+        return (7, get_specific_monday(year, 7, 3))
+    return None
+
+
+def _get_greenery_day(year):
+    """Returns Greenery Day."""
+    if 1989 <= year <= 2006:
+        return (4, 29)
+    if year >= 2007:
+        return (5, 4)
+    return None
+
+
+def _get_sports_day(year):
+    """Returns Sports Day."""
+    if 1966 <= year <= 1999:
+        return (10, 10)
+    if year >= 2000:
+        if year == 2020:
+            return (7, 24)
+        if year == 2021:
+            return (7, 23)
+        return (10, get_specific_monday(year, 10, 2))
+    return None
+
+
+def _get_mountain_day(year):
+    """Returns Mountain Day."""
+    if year < 2016:
+        return None
+    if year == 2020:
+        return (8, 10)
+    if year == 2021:
+        return (8, 8)
+    return (8, 11)
+
+
 def _get_japan_variable_holidays(year):
     """Returns a set of variable date holidays for Japan."""
     holidays = set()
 
     # Coming of Age Day
-    if year >= 2000:
-        holidays.add((1, get_specific_monday(year, 1, 2)))
-    else:
-        holidays.add((1, 15))
+    holidays.add(_get_coming_of_age_day(year))
 
     # Emperor's Birthday
-    if 1955 <= year <= 1988:
-        holidays.add((4, 29))
-    elif 1989 <= year <= 2018:
-        holidays.add((12, 23))
-    elif year >= 2020:
-        holidays.add((2, 23))
+    emp_bday = _get_emperor_birthday(year)
+    if emp_bday:
+        holidays.add(emp_bday)
+
+    # Marine Day (Sea Day)
+    marine_day = _get_marine_day(year)
+    if marine_day:
+        holidays.add(marine_day)
+
+    # Mountain Day
+    mountain_day = _get_mountain_day(year)
+    if mountain_day:
+        holidays.add(mountain_day)
 
     # Greenery Day
-    if 1989 <= year <= 2006:
-        holidays.add((4, 29))
-    elif year >= 2007:
-        holidays.add((5, 4))
+    greenery_day = _get_greenery_day(year)
+    if greenery_day:
+        holidays.add(greenery_day)
 
     # Sports Day
-    if 1966 <= year <= 1999:
-        holidays.add((10, 10))
-    elif year >= 2000:
-        if year == 2020:
-            holidays.add((7, 24))
-        elif year == 2021:
-            holidays.add((7, 23))
-        else:
-            holidays.add((10, get_specific_monday(year, 10, 2)))
+    sports_day = _get_sports_day(year)
+    if sports_day:
+        holidays.add(sports_day)
 
     return holidays
 
