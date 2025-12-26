@@ -1,3 +1,6 @@
+"""
+Test suite for hcal holiday color configuration.
+"""
 import os
 import shutil
 import subprocess
@@ -6,12 +9,13 @@ import tempfile
 import unittest
 
 class TestHcalHolidayColor(unittest.TestCase):
+    """Test cases for hcal holiday color customization."""
     def setUp(self):
         # Create a temporary directory for HOME
         self.test_dir = tempfile.mkdtemp()
         self.original_home = os.environ.get('HOME')
         os.environ['HOME'] = self.test_dir
-        
+
         # Path to hcal script
         self.hcal_path = os.path.abspath("./hcal")
 
@@ -22,44 +26,47 @@ class TestHcalHolidayColor(unittest.TestCase):
             os.environ['HOME'] = self.original_home
 
     def test_holiday_color_green(self):
+        """Test that holiday color can be set to green."""
         # Create .hcalrc with green holiday color
-        with open(os.path.join(self.test_dir, ".hcalrc"), "w") as f:
-            f.write("country=Japan\n")
-            f.write("holiday_color=green\n")
+        with open(os.path.join(self.test_dir, ".hcalrc"), "w", encoding="utf-8") as config_file:
+            config_file.write("country=Japan\n")
+            config_file.write("holiday_color=green\n")
 
         # Run hcal for Jan 2024 (Jan 1 is holiday in JP, and it is a Monday)
         cmd = [sys.executable, self.hcal_path, "1", "2024"]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-        
+
         # Jan 1 is New Year's Day, should be green (\033[32m)
         # Expected: \033[32m 1\033[0m
         self.assertIn("\033[32m 1\033[0m", result.stdout)
 
     def test_holiday_color_blue(self):
+        """Test that holiday color can be set to blue."""
         # Create .hcalrc with blue holiday color
-        with open(os.path.join(self.test_dir, ".hcalrc"), "w") as f:
-            f.write("country=Japan\n")
-            f.write("holiday_color=blue\n")
+        with open(os.path.join(self.test_dir, ".hcalrc"), "w", encoding="utf-8") as config_file:
+            config_file.write("country=Japan\n")
+            config_file.write("holiday_color=blue\n")
 
         # Run hcal for Jan 2024
         cmd = [sys.executable, self.hcal_path, "1", "2024"]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-        
+
         # Jan 1 should be blue (\033[34m)
         self.assertIn("\033[34m 1\033[0m", result.stdout)
 
     def test_holiday_color_default_red(self):
+        """Test that holiday color defaults to red if not specified."""
         # Create .hcalrc without holiday_color (defaults to red)
-        with open(os.path.join(self.test_dir, ".hcalrc"), "w") as f:
-            f.write("country=Japan\n")
+        with open(os.path.join(self.test_dir, ".hcalrc"), "w", encoding="utf-8") as config_file:
+            config_file.write("country=Japan\n")
 
         cmd = [sys.executable, self.hcal_path, "1", "2024"]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
-        
+
         # Jan 1 should be red (\033[31m)
         # Note: Jan 1 2024 is Monday, so it wouldn't be red unless it's a holiday.
         self.assertIn("\033[31m 1\033[0m", result.stdout)
-        
+
         # Ensure it's not green (previous default)
         self.assertNotIn("\033[32m 1\033[0m", result.stdout)
 
