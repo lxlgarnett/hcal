@@ -153,6 +153,15 @@ def _get_mountain_day(year):
     return (8, 11)
 
 
+def _get_respect_for_the_aged_day(year):
+    """Returns Respect for the Aged Day."""
+    if 1967 <= year <= 2002:
+        return (9, 15)
+    if year >= 2003:
+        return (9, get_specific_monday(year, 9, 3))
+    return None
+
+
 def _get_japan_variable_holidays(year):
     """Returns a set of variable date holidays for Japan."""
     holidays = set()
@@ -174,6 +183,11 @@ def _get_japan_variable_holidays(year):
     mountain_day = _get_mountain_day(year)
     if mountain_day:
         holidays.add(mountain_day)
+
+    # Respect for the Aged Day
+    respect_day = _get_respect_for_the_aged_day(year)
+    if respect_day:
+        holidays.add(respect_day)
 
     # Greenery Day
     greenery_day = _get_greenery_day(year)
