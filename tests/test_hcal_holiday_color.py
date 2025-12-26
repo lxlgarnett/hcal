@@ -1,9 +1,5 @@
 """
-<<<<<<< HEAD
-Tests for holiday color customization via .hcalrc.
-=======
 Test suite for hcal holiday color configuration.
->>>>>>> main
 """
 import os
 import shutil
