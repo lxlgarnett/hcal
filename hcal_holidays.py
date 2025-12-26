@@ -90,6 +90,26 @@ def _get_greenery_day(year):
     return None
 
 
+def _get_vernal_equinox_day(year):
+    """
+    Returns Vernal Equinox Day (Shunbun no Hi).
+    Calculated using astronomical approximation.
+    """
+    if year < 1948:
+        return None
+
+    if 1948 <= year <= 1979:
+        constant = 20.8357
+    elif 1980 <= year <= 2099:
+        constant = 20.8431
+    else:
+        # Fallback or future expansion; currently not strictly defined by this formula
+        return None
+
+    day = int(constant + 0.242194 * (year - 1980)) - int((year - 1980) // 4)
+    return (3, day)
+
+
 def _get_sports_day(year):
     """Returns Sports Day."""
     if 1966 <= year <= 1999:
@@ -140,6 +160,11 @@ def _get_japan_variable_holidays(year):
     greenery_day = _get_greenery_day(year)
     if greenery_day:
         holidays.add(greenery_day)
+
+    # Vernal Equinox Day
+    vernal_equinox = _get_vernal_equinox_day(year)
+    if vernal_equinox:
+        holidays.add(vernal_equinox)
 
     # Sports Day
     sports_day = _get_sports_day(year)
