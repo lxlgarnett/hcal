@@ -11,6 +11,7 @@ import unittest
 class TestHcalHolidayColor(unittest.TestCase):
     """Test cases for hcal holiday color customization."""
     def setUp(self):
+        """Set up a temporary HOME directory and define hcal path."""
         # Create a temporary directory for HOME
         self.test_dir = tempfile.mkdtemp()
         self.original_home = os.environ.get('HOME')
@@ -20,6 +21,7 @@ class TestHcalHolidayColor(unittest.TestCase):
         self.hcal_path = os.path.abspath("./hcal")
 
     def tearDown(self):
+        """Clean up the temporary directory and restore HOME."""
         # Cleanup
         shutil.rmtree(self.test_dir)
         if self.original_home:

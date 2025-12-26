@@ -61,7 +61,7 @@ class HighlightCalendar(calendar.TextCalendar):
             highlight_today (bool): Whether to highlight today's date.
             holiday_color (str): The color name for holidays.
         """
-        # pylint: disable=too-many-arguments
+        # pylint: disable=too-many-arguments, too-many-positional-arguments
         super().__init__(firstweekday)
         self.today = today
         self.country = country

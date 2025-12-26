@@ -35,11 +35,11 @@ def _get_japan_fixed_holidays(year):
     """Returns a set of fixed date holidays for Japan."""
     holidays = set()
     if year >= 1955:
-        holidays.add((1, 1))   # New Year's Day
-        holidays.add((5, 3))   # Constitution Memorial Day
-        holidays.add((5, 5))   # Children's Day
+        holidays.add((1, 1))  # New Year's Day
+        holidays.add((5, 3))  # Constitution Memorial Day
+        holidays.add((5, 5))  # Children's Day
         holidays.add((11, 3))  # Culture Day
-        holidays.add((11, 23)) # Labor Thanksgiving Day
+        holidays.add((11, 23))  # Labor Thanksgiving Day
 
     if year >= 1967:
         holidays.add((2, 11))  # National Foundation Day
@@ -108,6 +108,25 @@ def _get_vernal_equinox_day(year):
 
     day = int(constant + 0.242194 * (year - 1980)) - int((year - 1980) // 4)
     return (3, day)
+
+
+def _get_autumnal_equinox_day(year):
+    """
+    Returns Autumnal Equinox Day (Shūbun no Hi).
+    Calculated using astronomical approximation.
+    """
+    if year < 1955:
+        return None
+
+    if 1955 <= year <= 1979:
+        constant = 23.2588
+    elif 1980 <= year <= 2099:
+        constant = 23.2488
+    else:
+        return None
+
+    day = int(constant + 0.242194 * (year - 1980)) - int((year - 1980) // 4)
+    return (9, day)
 
 
 def _get_sports_day(year):
@@ -179,6 +198,11 @@ def _get_japan_variable_holidays(year):
     vernal_equinox = _get_vernal_equinox_day(year)
     if vernal_equinox:
         holidays.add(vernal_equinox)
+
+    # Autumnal Equinox Day
+    autumnal_equinox = _get_autumnal_equinox_day(year)
+    if autumnal_equinox:
+        holidays.add(autumnal_equinox)
 
     # Sports Day
     sports_day = _get_sports_day(year)
