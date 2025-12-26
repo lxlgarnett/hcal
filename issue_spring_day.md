@@ -19,7 +19,7 @@ The date can be calculated using the astronomical approximation formula with yea
 
 **Constants:**
 *   **1980–2099:** `20.8431`
-*   **1948–1979:** `20.8357`
+*   **1955–1979:** `20.8357`
 
 This logic should be implemented in a new helper function (e.g., `_get_vernal_equinox_day`) within `hcal_holidays.py` and added to the `_get_japan_variable_holidays` set.
 

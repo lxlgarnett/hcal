@@ -95,10 +95,10 @@ def _get_vernal_equinox_day(year):
     Returns Vernal Equinox Day (Shunbun no Hi).
     Calculated using astronomical approximation.
     """
-    if year < 1948:
+    if year < 1955:
         return None
 
-    if 1948 <= year <= 1979:
+    if 1955 <= year <= 1979:
         constant = 20.8357
     elif 1980 <= year <= 2099:
         constant = 20.8431
