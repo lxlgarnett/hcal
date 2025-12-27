@@ -52,41 +52,24 @@ def pad_height(lines, height):
     return lines
 
 
-def display_three_months(cal, year, month):
-    """Displays previous, current, and next month side-by-side."""
-    prev_year, prev_month = add_months(year, month, -1)
-    next_year, next_month = add_months(year, month, 1)
+def display_multiple_months(cal, year, month, count_after, count_before=0):
+    """Displays a range of months, 3 per row."""
+    # Calculate all (year, month) pairs to display
+    month_list = []
+    # Start from month - count_before
+    curr_y, curr_m = add_months(year, month, -count_before)
+    total_months = count_before + 1 + count_after
 
-    lines_p = get_month_lines(cal, prev_year, prev_month)
-    lines_c = get_month_lines(cal, year, month)
-    lines_n = get_month_lines(cal, next_year, next_month)
+    for _ in range(total_months):
+        month_list.append((curr_y, curr_m))
+        curr_y, curr_m = add_months(curr_y, curr_m, 1)
 
-    # Normalize height
-    max_h = max(len(lines_p), len(lines_c), len(lines_n))
+    # Display in rows of 3
+    for i in range(0, len(month_list), 3):
+        chunk = month_list[i:i + 3]
 
-    lines_p = pad_height(lines_p, max_h)
-    lines_c = pad_height(lines_c, max_h)
-    lines_n = pad_height(lines_n, max_h)
-
-    # Join with 2 spaces gap
-    for i in range(max_h):
-        print(f"{lines_p[i]}  {lines_c[i]}  {lines_n[i]}")
-
-
-def display_year(cal, year):
-    """Displays the whole year calendar with 3 months per row."""
-    # Print year centered
-    # Standard width for 3 months: 20*3 + 2*2 = 64
-    print(str(year).center(64))
-    print()  # Empty line
-
-    for i in range(1, 13, 3):
-        # Current block of 3 months
-        months = [i, i + 1, i + 2]
-
-        # Get lines for each month
-        # Use get_month_lines which uses cal.formatmonth (handles highlighting)
-        block_lines = [get_month_lines(cal, year, m) for m in months]
+        # Get lines for each month in chunk
+        block_lines = [get_month_lines(cal, y, m) for y, m in chunk]
 
         # Normalize height
         max_h = max(len(lines) for lines in block_lines)
@@ -97,11 +80,20 @@ def display_year(cal, year):
         # Print the block
         for row in range(max_h):
             # Join month lines with 2 spaces
-            print("  ".join(block_lines[col][row] for col in range(len(months))))
+            print("  ".join(block_lines[col][row] for col in range(len(chunk))))
 
         # Add empty line between blocks of months, but not after the last block
-        if i + 2 < 12:
+        if i + 3 < len(month_list):
             print()
+
+
+def display_year(cal, year, extra_months=0):
+    """Displays the whole year calendar with 3 months per row."""
+    # Print year centered
+    # Standard width for 3 months: 20*3 + 2*2 = 64
+    print(str(year).center(64))
+    print()  # Empty line
+    display_multiple_months(cal, year, 1, 11 + extra_months, 0)
 
 
 def main():
@@ -115,6 +107,8 @@ def main():
                         help="Disable highlighting of today's date")
     parser.add_argument('-3', action='store_true', dest='three_months',
                         help='Display previous, current and next month')
+    parser.add_argument('-A', '--after', type=int, default=0,
+                        help='Display specific numbers of months after the current month')
     parser.add_argument('-y', dest='year_option', type=int, nargs='?', const=-1,
                         help='Display a calendar for the specified year (default: current year)')
     parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")
@@ -155,18 +149,19 @@ def main():
                             highlight_today=not args.no_highlight,
                             holiday_color=holiday_color)
 
-    if args.three_months:
-        if month is None:
+    if month is None:
+        if args.three_months:
             print("hcal: -3 option not valid with year", file=sys.stderr)
             return
+        display_year(cal, year, args.after)
 
-        display_three_months(cal, year, month)
+    elif args.three_months or args.after > 0:
+        count_before = 1 if args.three_months else 0
+        count_after = max(1 if args.three_months else 0, args.after)
+        display_multiple_months(cal, year, month, count_after, count_before)
 
     else:
-        if month:
-            print(cal.formatmonth(year, month))
-        else:
-            display_year(cal, year)
+        print(cal.formatmonth(year, month))
 
 
 if __name__ == "__main__":
