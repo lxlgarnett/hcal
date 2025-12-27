@@ -1,0 +1,74 @@
+.TH HCAL 1 "December 2025" "hcal 1.0" "User Commands"
+.SH NAME
+hcal \- a command-line calendar with highlighting and holiday support
+.SH SYNOPSIS
+.B hcal
+[\fIoptions\fR] [\fImonth\fR] [\fIyear\fR]
+.SH DESCRIPTION
+.B hcal
+is a simple command-line calendar utility written in Python. It is similar to the standard \fBcal\fR command but offers additional features such as highlighting the current date, coloring weekends, and supporting holidays (currently localized for Japan).
+.PP
+By default, \fBhcal\fR displays the current month with today's date highlighted.
+.SH OPTIONS
+.TP
+.BR \-h
+Disable highlighting of today's date.
+.TP
+.BR \-3
+Display the previous, current, and next month.
+.TP
+.BR \-A ", " \-\-after " \fIAFTER\fR"
+Display \fIAFTER\fR number of months after the current month.
+.TP
+.BR \-y " [\fIYEAR\fR]"
+Display a calendar for the specified \fIYEAR\fR. If no year is provided, it defaults to the current year.
+.TP
+.BR \-\-help
+Show the help message and exit.
+.SH ARGUMENTS
+.TP
+.I month
+The month number (1-12). If only the month is specified, the current year is assumed. If a number greater than 12 is provided, it is interpreted as a year.
+.TP
+.I year
+The year (e.g., 2025).
+.SH CONFIGURATION
+.B hcal
+can be configured via a user-specific configuration file located at \fB~/.hcalrc\fR.
+.PP
+The file expects \fBKEY=VALUE\fR pairs. Lines starting with \fB#\fR are ignored.
+.TP
+.B Supported Options:
+.RS
+.TP
+.B country
+Set to \fBJapan\fR to enable Japanese holiday highlighting (including fixed holidays, Happy Mondays, substitute holidays, and Citizens' Holidays).
+.TP
+.B holiday_color
+Set the color for holidays. Default is \fBred\fR.
+.br
+Supported colors: \fBred\fR, \fBgreen\fR, \fBblue\fR, \fByellow\fR, \fBmagenta\fR, \fBcyan\fR, \fBwhite\fR.
+.RE
+.SH EXAMPLES
+.TP
+Display the current month:
+$ hcal
+.TP
+Display June of the current year:
+$ hcal 6
+.TP
+Display December 2025:
+$ hcal 12 2025
+.TP
+Display the whole year 2026:
+$ hcal 2026
+.TP
+Display previous, current, and next month:
+$ hcal -3
+.TP
+Display current month and the next 2 months:
+$ hcal -A 2
+.SH AUTHORS
+Written by the hcal contributors.
+.SH SEE ALSO
+.BR cal (1)

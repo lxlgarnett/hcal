@@ -1,14 +1,14 @@
 # hcal
 
-A simple command-line calendar utility written in Python that highlights the current date.
+A simple command-line calendar utility written in Python that highlights the current date, weekends, and holidays.
 
 ## Features
 
-- Displays a formatted calendar for any month/year.
+- Displays a formatted calendar for any month or year.
 - **Highlights the current date** with a white background for quick focus.
 - **Colors weekends:** Saturdays in blue and Sundays in red.
-- **Supports Holidays:** Highlights holidays in red (currently supports Japan).
-- **Three-Month View:** Option to display previous, current, and next months.
+- **Supports Holidays:** Highlights holidays in red. Currently supports Japan, including complex rules like substitute holidays (Furikae Kyūjitsu) and Citizen's Holidays.
+- **Flexible Views:** Support for displaying multiple months or entire years.
 - Supports standard `cal` style arguments.
 
 ## Usage
@@ -25,6 +25,11 @@ Run for the current month:
 ./hcal
 ```
 
+Run for a specific month of the current year:
+```bash
+./hcal 12
+```
+
 Run for a specific month and year:
 ```bash
 ./hcal 12 2025
@@ -38,6 +43,7 @@ Run for a whole year:
 ### Command Line Options
 
 - `-3`: Display previous, current, and next month.
+- `-A, --after <n>`: Display `<n>` additional months after the specified month.
 - `-h`: Disable highlighting of today's date.
 - `-y [year]`: Display a calendar for the specified year (defaults to current year if no year provided).
 
