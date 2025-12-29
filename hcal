@@ -87,13 +87,23 @@ def display_multiple_months(cal, year, month, count_after, count_before=0):
             print()
 
 
-def display_year(cal, year, extra_months=0, before_months=0):
+def display_year(cal, year, extra_years=0, before_years=0):
     """Displays the whole year calendar with 3 months per row."""
-    # Print year centered
-    # Standard width for 3 months: 20*3 + 2*2 = 64
-    print(str(year).center(64))
-    print()  # Empty line
-    display_multiple_months(cal, year, 1, 11 + extra_months, before_months)
+    start_year = year - before_years
+    total_years = before_years + 1 + extra_years
+
+    for i in range(total_years):
+        curr_year = start_year + i
+        # Print year centered
+        # Standard width for 3 months: 20*3 + 2*2 = 64
+        print(str(curr_year).center(64))
+        print()  # Empty line after year header
+        display_multiple_months(cal, curr_year, 1, 11)
+
+        # Add empty lines between years, but not after the last year
+        if i < total_years - 1:
+            print()
+            print()
 
 
 def main():
@@ -108,9 +118,11 @@ def main():
     parser.add_argument('-3', action='store_true', dest='three_months',
                         help='Display previous, current and next month')
     parser.add_argument('-A', '--after', type=int, default=0,
-                        help='Display specific numbers of months after the current month')
+                        help='Display specific numbers of months (or years with -y) '
+                             'after the current month (or year)')
     parser.add_argument('-B', '--before', type=int, default=0,
-                        help='Display specific numbers of months before the current month')
+                        help='Display specific numbers of months (or years with -y) '
+                             'before the current month (or year)')
     parser.add_argument('-y', dest='year_option', type=int, nargs='?', const=-1,
                         help='Display a calendar for the specified year (default: current year)')
     parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")

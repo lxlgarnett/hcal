@@ -94,12 +94,16 @@ class TestHcalBeforeOption(unittest.TestCase):
 
     def test_hcal_before_with_year(self):
         """
-        Test 'hcal -y 2025 -B 1' shows Dec 2024 + whole year 2025.
+        Test 'hcal -y 2025 -B 1' shows whole year 2024 + whole year 2025.
         """
         cmd = [sys.executable, "./hcal", "-y", "2025", "-B", "1"]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
         output = result.stdout
 
+        # Should have separate headers for each year
+        self.assertIn("2024".center(64), output)
+        self.assertIn("2025".center(64), output)
+        self.assertIn("January 2024", output)
         self.assertIn("December 2024", output)
         self.assertIn("January 2025", output)
         self.assertIn("December 2025", output)
