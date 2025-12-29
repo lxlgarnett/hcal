@@ -121,10 +121,10 @@ def main():
     parser.add_argument('-3', action='store_true', dest='three_months',
                         help='Display previous, current and next month')
     parser.add_argument('-A', '--after', type=int, default=0,
-                        help='Display specific numbers of months (or years with -y) '
+                        help='Display specific numbers of months '
                              'after the current month (or year)')
     parser.add_argument('-B', '--before', type=int, default=0,
-                        help='Display specific numbers of months (or years with -y) '
+                        help='Display specific numbers of months '
                              'before the current month (or year)')
     parser.add_argument('-y', dest='year_option', type=int, nargs='?', const=-1,
                         help='Display a calendar for the specified year (default: current year)')
@@ -170,7 +170,10 @@ def main():
         if args.three_months:
             print("hcal: -3 option not valid with year", file=sys.stderr)
             return
-        display_year(cal, year, args.after, args.before)
+        if args.after > 0 or args.before > 0:
+            display_multiple_months(cal, year, 1, MONTHS_IN_YEAR - 1 + args.after, args.before)
+        else:
+            display_year(cal, year, args.after, args.before)
 
     elif args.three_months or args.after > 0 or args.before > 0:
         count_before = max(1 if args.three_months else 0, args.before)
