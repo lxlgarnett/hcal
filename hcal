@@ -81,6 +81,7 @@ def print_month_list(cal, month_list):
 
 def display_multiple_months(cal, year, month, count_after, count_before=0, show_year_headers=False):
     """Displays a range of months, 3 per row."""
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
     # Calculate all (year, month) pairs to display
     month_list = []
     # Start from month - count_before
@@ -97,7 +98,7 @@ def display_multiple_months(cal, year, month, count_after, count_before=0, show_
         # Group by year and print with headers
         current_year_group = []
         last_y = None
-        for i, (y, m) in enumerate(month_list):
+        for _, (y, m) in enumerate(month_list):
             if last_y is not None and y != last_y:
                 print(str(last_y).center(CALENDAR_WIDTH))
                 print()
@@ -132,6 +133,30 @@ def display_year(cal, year, extra_years=0, before_years=0):
             print()
 
 
+def infer_year_month(args, now):
+    """Infers the year and month to display based on arguments."""
+    year = args.year
+    month = args.month
+
+    if args.year_option is not None:
+        if args.year_option == -1:
+            year = now.year
+        else:
+            year = args.year_option
+        month = None
+    elif args.month is not None and args.year is None:
+        if args.month > MONTHS_IN_YEAR:
+            year = args.month
+            month = None  # Show whole year
+        else:
+            year = now.year
+            month = args.month
+    elif args.month is None and args.year is None:
+        year = now.year
+        month = now.month
+    return year, month
+
+
 def main():
     """
     Main function to parse arguments and display the calendar.
@@ -157,27 +182,7 @@ def main():
     args = parser.parse_args()
 
     now = datetime.datetime.now()
-
-    year = args.year
-    month = args.month
-
-    # Logic for month/year inference
-    if args.year_option is not None:
-        if args.year_option == -1:
-            year = now.year
-        else:
-            year = args.year_option
-        month = None
-    elif args.month is not None and args.year is None:
-        if args.month > MONTHS_IN_YEAR:
-            year = args.month
-            month = None  # Show whole year
-        else:
-            year = now.year
-            month = args.month
-    elif args.month is None and args.year is None:
-        year = now.year
-        month = now.month
+    year, month = infer_year_month(args, now)
 
     # Read config
     config = read_config("~/.hcalrc")
@@ -194,7 +199,8 @@ def main():
             print("hcal: -3 option not valid with year", file=sys.stderr)
             return
         if args.after > 0 or args.before > 0:
-            display_multiple_months(cal, year, 1, MONTHS_IN_YEAR - 1 + args.after, args.before, show_year_headers=True)
+            display_multiple_months(cal, year, 1, MONTHS_IN_YEAR - 1 + args.after,
+                                    args.before, show_year_headers=True)
         else:
             display_year(cal, year, args.after, args.before)
 
