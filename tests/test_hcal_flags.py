@@ -1,12 +1,11 @@
 """
 Tests for hcal command-line flags.
 """
-import subprocess
 import datetime
-import sys
 import unittest
+from tests.hcal_test_base import HcalTestCase
 
-class TestHcalFlags(unittest.TestCase):
+class TestHcalFlags(HcalTestCase):
     """
     Test cases for hcal flags.
     """
@@ -14,8 +13,7 @@ class TestHcalFlags(unittest.TestCase):
         """
         Test that --help displays the help message.
         """
-        cmd = [sys.executable, "./hcal", "--help"]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        result = self.run_hcal("--help", check=False)
 
         # Check output for usage info
         self.assertIn("usage: hcal", result.stdout)
@@ -27,13 +25,11 @@ class TestHcalFlags(unittest.TestCase):
         Test that -h disables today's highlighting.
         """
         now = datetime.datetime.now()
-        # day = now.day  # Unused
         month = now.month
         year = now.year
 
         # Run hcal with -h for current month/year
-        cmd = [sys.executable, "./hcal", "-h", str(month), str(year)]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        result = self.run_hcal("-h", str(month), str(year))
         output = result.stdout
 
         # The highlight code is \033[47;30m
@@ -41,12 +37,6 @@ class TestHcalFlags(unittest.TestCase):
 
         self.assertNotIn(ansi_highlight, output,
                          "Highlight code found but should be disabled by -h")
-
-        # Ensure the day is still present
-        # Note: calendar formatting might add padding, but the number itself should be there.
-        # It's harder to check the exact number without parsing the grid, but if we check for
-        # absence of highlight and presence of weekends (which confirms it printed a calendar),
-        # that's good enough.
 
         self.assertIn(str(year), output)
         # Check for weekend color (Red or Blue) to ensure colors are generally working

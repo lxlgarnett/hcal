@@ -8,12 +8,15 @@ import calendar
 import datetime
 import re
 import sys
-from hcal_util import HighlightCalendar, read_config
+from hcal_util import HighlightCalendar, read_config, CALENDAR_WIDTH
+
+
+MONTHS_IN_YEAR = 12
 
 
 def strip_ansi(text):
     """Strips ANSI escape codes from text."""
-    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    ansi_escape = re.compile(r'(?:\x1B[@-Z\\-_]|\x1B\[[0-?]*[ -/]*[@-~])')
     return ansi_escape.sub('', text)
 
 
@@ -40,8 +43,8 @@ def get_month_lines(cal, year, month):
 def add_months(year, month, delta):
     """Calculates a new year and month given a delta."""
     m_new = month + delta
-    y_new = year + (m_new - 1) // 12
-    m_new = (m_new - 1) % 12 + 1
+    y_new = year + (m_new - 1) // MONTHS_IN_YEAR
+    m_new = (m_new - 1) % MONTHS_IN_YEAR + 1
     return y_new, m_new
 
 
@@ -96,9 +99,9 @@ def display_year(cal, year, extra_years=0, before_years=0):
         curr_year = start_year + i
         # Print year centered
         # Standard width for 3 months: 20*3 + 2*2 = 64
-        print(str(curr_year).center(64))
+        print(str(curr_year).center(CALENDAR_WIDTH))
         print()  # Empty line after year header
-        display_multiple_months(cal, curr_year, 1, 11)
+        display_multiple_months(cal, curr_year, 1, MONTHS_IN_YEAR - 1)
 
         # Add empty lines between years, but not after the last year
         if i < total_years - 1:
@@ -143,7 +146,7 @@ def main():
             year = args.year_option
         month = None
     elif args.month is not None and args.year is None:
-        if args.month > 12:
+        if args.month > MONTHS_IN_YEAR:
             year = args.month
             month = None  # Show whole year
         else:

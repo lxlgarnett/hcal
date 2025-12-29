@@ -1,21 +1,13 @@
 """
 Tests for the hcal -3 option.
 """
-# pylint: disable=duplicate-code
-import re
-import subprocess
-import sys
 import unittest
+from hcal_util import CALENDAR_WIDTH
+from tests.hcal_test_base import HcalTestCase
 
 
-class TestHcalThreeMonths(unittest.TestCase):
+class TestHcalThreeMonths(HcalTestCase):
     """Test suite for 'hcal -3' functionality."""
-
-    @staticmethod
-    def strip_ansi(text):
-        """Helper to strip ANSI escape codes."""
-        ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
-        return ansi_escape.sub('', text)
 
     def test_hcal_three_months(self):
         """
@@ -24,14 +16,11 @@ class TestHcalThreeMonths(unittest.TestCase):
         # Pick a specific month to test: Jan 2025
         # Prev: Dec 2024
         # Next: Feb 2025
-        cmd = [sys.executable, "./hcal", "-3", "1", "2025"]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        result = self.run_hcal("-3", "1", "2025")
         output = result.stdout
 
         # Check headers
-        self.assertIn("December 2024", output)
-        self.assertIn("January 2025", output)
-        self.assertIn("February 2025", output)
+        self.assert_months_in_output(output, ["December 2024", "January 2025", "February 2025"])
 
         # Check alignment (crude check)
         lines = output.split('\n')
@@ -52,34 +41,30 @@ class TestHcalThreeMonths(unittest.TestCase):
 
     def test_hcal_three_months_alignment(self):
         """
-        Test that 'hcal -3' output lines are properly padded to 64 chars visually.
+        Test that 'hcal -3' output lines are properly padded to CALENDAR_WIDTH chars visually.
         20 + 2 + 20 + 2 + 20 = 64.
         """
-        cmd = [sys.executable, "./hcal", "-3", "1", "2025"]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        result = self.run_hcal("-3", "1", "2025")
         lines = result.stdout.split('\n')
 
         for line in lines:
             if not line:
                 continue
-            vis_len = len(self.strip_ansi(line))
-            self.assertEqual(vis_len, 64, f"Line length {vis_len} != 64: '{line}'")
+            self.assert_visual_length(line, CALENDAR_WIDTH)
 
     def test_hcal_three_months_default(self):
         """
         Test 'hcal -3' without args (defaults to current month).
         """
         # Just check command runs successfully
-        cmd = [sys.executable, "./hcal", "-3"]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        result = self.run_hcal("-3")
         self.assertEqual(result.returncode, 0)
 
     def test_hcal_three_months_error_on_year(self):
         """
         Test 'hcal -3 2025' prints error.
         """
-        cmd = [sys.executable, "./hcal", "-3", "2025"]
-        result = subprocess.run(cmd, capture_output=True, text=True, check=False)
+        result = self.run_hcal("-3", "2025", check=False)
         self.assertIn("not valid with year", result.stderr)
 
 
