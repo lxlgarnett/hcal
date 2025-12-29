@@ -15,6 +15,8 @@ ANSI_COLORS = {
     'white': '\033[37m',
 }
 
+CALENDAR_WIDTH = 64
+
 
 def read_config(file_path):
     """
