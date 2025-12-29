@@ -12,7 +12,7 @@ class HcalTestCase(unittest.TestCase):
     @staticmethod
     def strip_ansi(text):
         """Helper to strip ANSI escape codes."""
-        ansi_escape = re.compile(r'(?:\x1B[@-Z\\-_]|\x1B\[[0-?]*[ -/]*[@-~])')
+        ansi_escape = re.compile(r'\x1B(?:[@-Z\\_-]|\[[0-?]*[ -/]*[@-~])')
         return ansi_escape.sub('', text)
 
     def run_hcal(self, *args, check=True):
