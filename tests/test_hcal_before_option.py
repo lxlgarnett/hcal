@@ -59,18 +59,18 @@ class TestHcalBeforeOption(HcalTestCase):
 
     def test_hcal_before_with_year(self):
         """
-        Test 'hcal -y 2025 -B 1' shows whole year 2024 + whole year 2025.
+        Test 'hcal -y 2025 -B 1' shows 1 month of 2024 + whole year 2025 with year headers.
         """
         result = self.run_hcal("-y", "2025", "-B", "1")
         output = result.stdout
 
-        # Should have separate headers for each year
+        # Should have year headers
         self.assertIn("2024".center(CALENDAR_WIDTH), output)
         self.assertIn("2025".center(CALENDAR_WIDTH), output)
-        self.assertIn("January 2024", output)
         self.assertIn("December 2024", output)
         self.assertIn("January 2025", output)
         self.assertIn("December 2025", output)
+        self.assertNotIn("November 2024", output)
 
         # Check that it didn't print error
         self.assertEqual(result.returncode, 0)

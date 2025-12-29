@@ -55,19 +55,8 @@ def pad_height(lines, height):
     return lines
 
 
-def display_multiple_months(cal, year, month, count_after, count_before=0):
-    """Displays a range of months, 3 per row."""
-    # Calculate all (year, month) pairs to display
-    month_list = []
-    # Start from month - count_before
-    curr_y, curr_m = add_months(year, month, -count_before)
-    total_months = count_before + 1 + count_after
-
-    for _ in range(total_months):
-        month_list.append((curr_y, curr_m))
-        curr_y, curr_m = add_months(curr_y, curr_m, 1)
-
-    # Display in rows of 3
+def print_month_list(cal, month_list):
+    """Prints a list of (year, month) pairs in rows of 3."""
     for i in range(0, len(month_list), 3):
         chunk = month_list[i:i + 3]
 
@@ -90,6 +79,36 @@ def display_multiple_months(cal, year, month, count_after, count_before=0):
             print()
 
 
+def display_multiple_months(cal, year, month, count_after, count_before=0, show_year_headers=False):
+    """Displays a range of months, 3 per row."""
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
+    # Calculate all (year, month) pairs to display
+    month_list = []
+    # Start from month - count_before
+    curr_y, curr_m = add_months(year, month, -count_before)
+    total_months = count_before + 1 + count_after
+
+    for _ in range(total_months):
+        month_list.append((curr_y, curr_m))
+        curr_y, curr_m = add_months(curr_y, curr_m, 1)
+
+    if not show_year_headers:
+        print_month_list(cal, month_list)
+    else:
+        # Group by year and print with headers
+        from itertools import groupby
+
+        year_groups = [list(g) for _, g in groupby(month_list, key=lambda item: item[0])]
+        for i, group in enumerate(year_groups):
+            year_val = group[0][0]
+            print(str(year_val).center(CALENDAR_WIDTH))
+            print()
+            print_month_list(cal, group)
+            if i < len(year_groups) - 1:
+                print()
+                print()
+
+
 def display_year(cal, year, extra_years=0, before_years=0):
     """Displays the whole year calendar with 3 months per row."""
     start_year = year - before_years
@@ -109,36 +128,11 @@ def display_year(cal, year, extra_years=0, before_years=0):
             print()
 
 
-def main():
-    """
-    Main function to parse arguments and display the calendar.
-    """
-    parser = argparse.ArgumentParser(description="Show calendar on terminal", add_help=False)
-    parser.add_argument('--help', action='help', default=argparse.SUPPRESS,
-                        help='show this help message and exit')
-    parser.add_argument('-h', action='store_true', dest='no_highlight',
-                        help="Disable highlighting of today's date")
-    parser.add_argument('-3', action='store_true', dest='three_months',
-                        help='Display previous, current and next month')
-    parser.add_argument('-A', '--after', type=int, default=0,
-                        help='Display specific numbers of months (or years with -y) '
-                             'after the current month (or year)')
-    parser.add_argument('-B', '--before', type=int, default=0,
-                        help='Display specific numbers of months (or years with -y) '
-                             'before the current month (or year)')
-    parser.add_argument('-y', dest='year_option', type=int, nargs='?', const=-1,
-                        help='Display a calendar for the specified year (default: current year)')
-    parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")
-    parser.add_argument('year', type=int, nargs='?', help="Year (e.g. 2023)")
-
-    args = parser.parse_args()
-
-    now = datetime.datetime.now()
-
+def infer_year_month(args, now):
+    """Infers the year and month to display based on arguments."""
     year = args.year
     month = args.month
 
-    # Logic for month/year inference
     if args.year_option is not None:
         if args.year_option == -1:
             year = now.year
@@ -155,6 +149,35 @@ def main():
     elif args.month is None and args.year is None:
         year = now.year
         month = now.month
+    return year, month
+
+
+def main():
+    """
+    Main function to parse arguments and display the calendar.
+    """
+    parser = argparse.ArgumentParser(description="Show calendar on terminal", add_help=False)
+    parser.add_argument('--help', action='help', default=argparse.SUPPRESS,
+                        help='show this help message and exit')
+    parser.add_argument('-h', action='store_true', dest='no_highlight',
+                        help="Disable highlighting of today's date")
+    parser.add_argument('-3', action='store_true', dest='three_months',
+                        help='Display previous, current and next month')
+    parser.add_argument('-A', '--after', type=int, default=0,
+                        help='Display specific numbers of months '
+                             'after the current month (or year)')
+    parser.add_argument('-B', '--before', type=int, default=0,
+                        help='Display specific numbers of months '
+                             'before the current month (or year)')
+    parser.add_argument('-y', dest='year_option', type=int, nargs='?', const=-1,
+                        help='Display a calendar for the specified year (default: current year)')
+    parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")
+    parser.add_argument('year', type=int, nargs='?', help="Year (e.g. 2023)")
+
+    args = parser.parse_args()
+
+    now = datetime.datetime.now()
+    year, month = infer_year_month(args, now)
 
     # Read config
     config = read_config("~/.hcalrc")
@@ -170,7 +193,11 @@ def main():
         if args.three_months:
             print("hcal: -3 option not valid with year", file=sys.stderr)
             return
-        display_year(cal, year, args.after, args.before)
+        if args.after > 0 or args.before > 0:
+            display_multiple_months(cal, year, 1, MONTHS_IN_YEAR - 1 + args.after,
+                                    args.before, show_year_headers=True)
+        else:
+            display_year(cal, year, args.after, args.before)
 
     elif args.three_months or args.after > 0 or args.before > 0:
         count_before = max(1 if args.three_months else 0, args.before)
