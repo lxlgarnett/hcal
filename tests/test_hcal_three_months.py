@@ -1,6 +1,7 @@
 """
 Tests for the hcal -3 option.
 """
+# pylint: disable=duplicate-code
 import re
 import subprocess
 import sys

@@ -20,6 +20,9 @@ Display the previous, current, and next month.
 .BR \-A ", " \-\-after " \fIAFTER\fR"
 Display \fIAFTER\fR number of months after the current month.
 .TP
+.BR \-B ", " \-\-before " \fIBEFORE\fR"
+Display \fIBEFORE\fR number of months before the current month.
+.TP
 .BR \-y " [\fIYEAR\fR]"
 Display a calendar for the specified \fIYEAR\fR. If no year is provided, it defaults to the current year.
 .TP
@@ -68,6 +71,9 @@ $ hcal -3
 .TP
 Display current month and the next 2 months:
 $ hcal -A 2
+.TP
+Display current month and the previous 2 months:
+$ hcal -B 2
 .SH AUTHORS
 Written by the hcal contributors.
 .SH SEE ALSO

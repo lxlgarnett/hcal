@@ -87,13 +87,13 @@ def display_multiple_months(cal, year, month, count_after, count_before=0):
             print()
 
 
-def display_year(cal, year, extra_months=0):
+def display_year(cal, year, extra_months=0, before_months=0):
     """Displays the whole year calendar with 3 months per row."""
     # Print year centered
     # Standard width for 3 months: 20*3 + 2*2 = 64
     print(str(year).center(64))
     print()  # Empty line
-    display_multiple_months(cal, year, 1, 11 + extra_months, 0)
+    display_multiple_months(cal, year, 1, 11 + extra_months, before_months)
 
 
 def main():
@@ -109,6 +109,8 @@ def main():
                         help='Display previous, current and next month')
     parser.add_argument('-A', '--after', type=int, default=0,
                         help='Display specific numbers of months after the current month')
+    parser.add_argument('-B', '--before', type=int, default=0,
+                        help='Display specific numbers of months before the current month')
     parser.add_argument('-y', dest='year_option', type=int, nargs='?', const=-1,
                         help='Display a calendar for the specified year (default: current year)')
     parser.add_argument('month', type=int, nargs='?', help="Month number (1-12)")
@@ -153,10 +155,10 @@ def main():
         if args.three_months:
             print("hcal: -3 option not valid with year", file=sys.stderr)
             return
-        display_year(cal, year, args.after)
+        display_year(cal, year, args.after, args.before)
 
-    elif args.three_months or args.after > 0:
-        count_before = 1 if args.three_months else 0
+    elif args.three_months or args.after > 0 or args.before > 0:
+        count_before = max(1 if args.three_months else 0, args.before)
         count_after = max(1 if args.three_months else 0, args.after)
         display_multiple_months(cal, year, month, count_after, count_before)
 
