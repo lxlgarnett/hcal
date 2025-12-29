@@ -55,19 +55,8 @@ def pad_height(lines, height):
     return lines
 
 
-def display_multiple_months(cal, year, month, count_after, count_before=0):
-    """Displays a range of months, 3 per row."""
-    # Calculate all (year, month) pairs to display
-    month_list = []
-    # Start from month - count_before
-    curr_y, curr_m = add_months(year, month, -count_before)
-    total_months = count_before + 1 + count_after
-
-    for _ in range(total_months):
-        month_list.append((curr_y, curr_m))
-        curr_y, curr_m = add_months(curr_y, curr_m, 1)
-
-    # Display in rows of 3
+def print_month_list(cal, month_list):
+    """Prints a list of (year, month) pairs in rows of 3."""
     for i in range(0, len(month_list), 3):
         chunk = month_list[i:i + 3]
 
@@ -88,6 +77,40 @@ def display_multiple_months(cal, year, month, count_after, count_before=0):
         # Add empty line between blocks of months, but not after the last block
         if i + 3 < len(month_list):
             print()
+
+
+def display_multiple_months(cal, year, month, count_after, count_before=0, show_year_headers=False):
+    """Displays a range of months, 3 per row."""
+    # Calculate all (year, month) pairs to display
+    month_list = []
+    # Start from month - count_before
+    curr_y, curr_m = add_months(year, month, -count_before)
+    total_months = count_before + 1 + count_after
+
+    for _ in range(total_months):
+        month_list.append((curr_y, curr_m))
+        curr_y, curr_m = add_months(curr_y, curr_m, 1)
+
+    if not show_year_headers:
+        print_month_list(cal, month_list)
+    else:
+        # Group by year and print with headers
+        current_year_group = []
+        last_y = None
+        for i, (y, m) in enumerate(month_list):
+            if last_y is not None and y != last_y:
+                print(str(last_y).center(CALENDAR_WIDTH))
+                print()
+                print_month_list(cal, current_year_group)
+                print()
+                print()
+                current_year_group = []
+            current_year_group.append((y, m))
+            last_y = y
+        if current_year_group:
+            print(str(last_y).center(CALENDAR_WIDTH))
+            print()
+            print_month_list(cal, current_year_group)
 
 
 def display_year(cal, year, extra_years=0, before_years=0):
@@ -171,7 +194,7 @@ def main():
             print("hcal: -3 option not valid with year", file=sys.stderr)
             return
         if args.after > 0 or args.before > 0:
-            display_multiple_months(cal, year, 1, MONTHS_IN_YEAR - 1 + args.after, args.before)
+            display_multiple_months(cal, year, 1, MONTHS_IN_YEAR - 1 + args.after, args.before, show_year_headers=True)
         else:
             display_year(cal, year, args.after, args.before)
 
