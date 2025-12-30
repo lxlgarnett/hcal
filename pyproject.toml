@@ -3,7 +3,7 @@ name = "hcal"
 version = "1.0.0"
 description = "A simple command-line calendar utility"
 authors = [
-    { name = "Xiaolei Li" } # You can add an email if you wish
+    { name = "Xiaolei Li" }
 ]
 readme = "README.md"
 license = { file = "LICENSE" }
