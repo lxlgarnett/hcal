@@ -9,5 +9,20 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
 
+keywords = ["calendar", "cli", "terminal", "utility"]
+classifiers = [
+    "Development Status :: 4 - Beta", # Or "5 - Production/Stable" if you consider it stable
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Utilities",
+]
+
 [project.urls]
 Repository = "https://github.com/lxlgarnett/hcal"
