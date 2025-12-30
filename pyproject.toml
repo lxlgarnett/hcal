@@ -2,4 +2,12 @@
 name = "hcal"
 version = "1.0.0"
 description = "A simple command-line calendar utility"
+authors = [
+    { name = "Xiaolei Li" } # You can add an email if you wish
+]
+readme = "README.md"
+license = { file = "LICENSE" }
 requires-python = ">=3.9"
+
+[project.urls]
+Repository = "https://github.com/lxlgarnett/hcal"
