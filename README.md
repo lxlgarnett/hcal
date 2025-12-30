@@ -1,5 +1,7 @@
 # hcal
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) ![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg) [![Pylint](https://github.com/lxlgarnett/hcal/actions/workflows/pylint.yml/badge.svg)](https://github.com/lxlgarnett/hcal/actions/workflows/pylint.yml) ![GitHub repo size](https://img.shields.io/github/repo-size/lxlgarnett/hcal)
+
 A simple command-line calendar utility written in Python that highlights the current date, weekends, and holidays.
 
 ## Features
