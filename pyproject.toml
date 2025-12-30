@@ -11,7 +11,7 @@ requires-python = ">=3.9"
 
 keywords = ["calendar", "cli", "terminal", "utility"]
 classifiers = [
-    "Development Status :: 4 - Beta", # Or "5 - Production/Stable" if you consider it stable
+    "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Intended Audience :: End Users/Desktop",
     "License :: OSI Approved :: MIT License",
