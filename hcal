@@ -8,6 +8,7 @@ import calendar
 import datetime
 import re
 import sys
+from itertools import groupby
 from hcal_util import HighlightCalendar, read_config
 
 
@@ -79,6 +80,20 @@ def print_month_list(cal, month_list, col_width=0, month_width=20):
             print()
 
 
+def display_grouped_years(cal, month_list, col_width, month_width):
+    """Displays months grouped by year with headers."""
+    total_width = month_width * 3 + 4
+    year_groups = [list(g) for _, g in groupby(month_list, key=lambda item: item[0])]
+    for i, group in enumerate(year_groups):
+        year_val = group[0][0]
+        print(str(year_val).center(total_width))
+        print()
+        print_month_list(cal, group, col_width, month_width)
+        if i < len(year_groups) - 1:
+            print()
+            print()
+
+
 def display_multiple_months(cal, year, month, count_after, count_before=0, show_year_headers=False,
                             col_width=0, month_width=20):
     """Displays a range of months, 3 per row."""
@@ -96,23 +111,12 @@ def display_multiple_months(cal, year, month, count_after, count_before=0, show_
     if not show_year_headers:
         print_month_list(cal, month_list, col_width, month_width)
     else:
-        # Group by year and print with headers
-        from itertools import groupby
-
-        total_width = month_width * 3 + 4
-        year_groups = [list(g) for _, g in groupby(month_list, key=lambda item: item[0])]
-        for i, group in enumerate(year_groups):
-            year_val = group[0][0]
-            print(str(year_val).center(total_width))
-            print()
-            print_month_list(cal, group, col_width, month_width)
-            if i < len(year_groups) - 1:
-                print()
-                print()
+        display_grouped_years(cal, month_list, col_width, month_width)
 
 
 def display_year(cal, year, extra_years=0, before_years=0, col_width=0, month_width=20):
     """Displays the whole year calendar with 3 months per row."""
+    # pylint: disable=too-many-arguments, too-many-positional-arguments
     start_year = year - before_years
     total_years = before_years + 1 + extra_years
     total_width = month_width * 3 + 4
@@ -124,7 +128,8 @@ def display_year(cal, year, extra_years=0, before_years=0, col_width=0, month_wi
         print(str(curr_year).center(total_width))
         print()  # Empty line after year header
         display_multiple_months(cal, curr_year, 1, MONTHS_IN_YEAR - 1,
-                                show_year_headers=False, col_width=col_width, month_width=month_width)
+                                show_year_headers=False, col_width=col_width,
+                                month_width=month_width)
 
         # Add empty lines between years, but not after the last year
         if i < total_years - 1:

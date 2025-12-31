@@ -12,16 +12,16 @@ class TestHcalJulian(HcalTestCase):
         """Test Julian days for January 2025."""
         result = self.run_hcal("-j", "1", "2025")
         output = result.stdout
-        
+
         # Check header
         self.assertIn("January 2025", output)
-        
+
         # Check specific Julian days
         # Jan 1 is 1
         self.assertIn(" 1", output)
         # Jan 31 is 31
         self.assertIn(" 31", output)
-        
+
         # Check visual width of lines (should be 27 for month lines)
         lines = output.split('\n')
         # Find a line with dates
@@ -33,10 +33,10 @@ class TestHcalJulian(HcalTestCase):
         """Test Julian days for December 2025."""
         result = self.run_hcal("-j", "12", "2025")
         output = result.stdout
-        
+
         # Check header
         self.assertIn("December 2025", output)
-        
+
         # Check specific Julian days
         # Dec 1 is 335
         self.assertIn("335", output)
@@ -48,11 +48,11 @@ class TestHcalJulian(HcalTestCase):
         # Run for Dec 2025 (shows Nov 2025, Dec 2025, Jan 2026)
         result = self.run_hcal("-j", "-3", "12", "2025")
         output = result.stdout
-        
+
         self.assertIn("November 2025", output)
         self.assertIn("December 2025", output)
         self.assertIn("January 2026", output)
-        
+
         # Nov 1 is 305
         self.assertIn("305", output)
         # Jan 1 is 1

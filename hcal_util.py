@@ -51,6 +51,7 @@ class HighlightCalendar(calendar.TextCalendar):
     """
     A custom TextCalendar that highlights the current day, weekends, and holidays.
     """
+    # pylint: disable=too-many-instance-attributes
 
     def __init__(self, firstweekday=0, today=None, country=None,
                  highlight_today=True, holiday_color='red', julian=False):
