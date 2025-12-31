@@ -2,7 +2,7 @@
 Tests for the hcal -3 option.
 """
 import unittest
-from hcal_util import CALENDAR_WIDTH
+from tests.test_constants import CALENDAR_WIDTH
 from tests.hcal_test_base import HcalTestCase
 
 

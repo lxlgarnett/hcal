@@ -16,7 +16,6 @@ ANSI_COLORS = {
     'white': '\033[37m',
 }
 
-CALENDAR_WIDTH = 64
 DAYS_IN_WEEK = 7
 JULIAN_COL_WIDTH = 3
 DEFAULT_COL_WIDTH = 2
@@ -91,9 +90,9 @@ class HighlightCalendar(calendar.TextCalendar):
         else:
             # Default calendar day width is 2
             col_width = DEFAULT_COL_WIDTH
-            # The 'w' argument for formatmonth should be 0 to use the default width
+            # The 'w' argument for formatmonth should be the default column width
             # for non-Julian days.
-            self.formatmonth_w = 0
+            self.formatmonth_w = DEFAULT_COL_WIDTH
 
         self.month_width = col_width * DAYS_IN_WEEK + spaces_in_week_line
 
