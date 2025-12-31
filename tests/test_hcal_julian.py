@@ -66,5 +66,30 @@ class TestHcalJulian(HcalTestCase):
         max_len = max(len(self.strip_ansi(line)) for line in lines)
         self.assertEqual(max_len, 85)
 
+    def test_julian_leap_year_2024(self):
+        """Test Julian days for leap year 2024."""
+        # February 2024
+        result = self.run_hcal("-j", "2", "2024")
+        output = result.stdout
+        self.assertIn("February 2024", output)
+        # Feb 1 is 32
+        self.assertIn(" 32", output)
+        # Feb 29 is 60
+        self.assertIn(" 60", output)
+
+        # March 2024
+        result = self.run_hcal("-j", "3", "2024")
+        output = result.stdout
+        self.assertIn("March 2024", output)
+        # Mar 1 is 61
+        self.assertIn(" 61", output)
+
+        # December 2024
+        result = self.run_hcal("-j", "12", "2024")
+        output = result.stdout
+        self.assertIn("December 2024", output)
+        # Dec 31 is 366
+        self.assertIn("366", output)
+
 if __name__ == "__main__":
     unittest.main()
