@@ -193,10 +193,10 @@ def main():
     # Determine dimensions
     if args.julian:
         col_width = 3
-        month_width = 27  # 3*7 + 6
+        month_width = 3 * 7 + 6
     else:
         col_width = 0  # default 2
-        month_width = 20  # 2*7 + 6
+        month_width = 2 * 7 + 6
 
     # Read config
     config = read_config("~/.hcalrc")
