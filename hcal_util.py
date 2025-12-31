@@ -83,17 +83,17 @@ class HighlightCalendar(calendar.TextCalendar):
 
         if self.julian:
             # Day of year can be 3 digits
-            self.col_width = 3
+            col_width = 3
             # The 'w' argument for formatmonth should be 3 for Julian days
             self.formatmonth_w = 3
         else:
             # Default calendar day width is 2
-            self.col_width = 2
+            col_width = 2
             # The 'w' argument for formatmonth should be 0 to use the default width
             # for non-Julian days.
             self.formatmonth_w = 0
 
-        self.month_width = self.col_width * days_in_week + spaces_in_week_line
+        self.month_width = col_width * days_in_week + spaces_in_week_line
 
     def formatday(self, day, weekday, width):
         """
