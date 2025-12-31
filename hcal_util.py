@@ -77,6 +77,24 @@ class HighlightCalendar(calendar.TextCalendar):
         self.holiday_color_code = ANSI_COLORS.get(holiday_color.lower(), ANSI_COLORS['red'])
         self.julian = julian
 
+        # Calculate dimensions
+        days_in_week = 7
+        spaces_in_week_line = days_in_week - 1
+
+        if self.julian:
+            # Day of year can be 3 digits
+            self.col_width = 3
+            # The 'w' argument for formatmonth should be 3 for Julian days
+            self.formatmonth_w = 3
+        else:
+            # Default calendar day width is 2
+            self.col_width = 2
+            # The 'w' argument for formatmonth should be 0 to use the default width
+            # for non-Julian days.
+            self.formatmonth_w = 0
+
+        self.month_width = self.col_width * days_in_week + spaces_in_week_line
+
     def formatday(self, day, weekday, width):
         """
         Returns a formatted string for a single day.

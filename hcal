@@ -29,15 +29,15 @@ def pad_line(line, width=20):
     return line
 
 
-def get_month_lines(cal, year, month, col_width=0, width=20):
+def get_month_lines(cal, year, month):
     """Returns a list of padded strings for the month."""
-    month_str = cal.formatmonth(year, month, w=col_width)
+    month_str = cal.formatmonth(year, month, w=cal.formatmonth_w)
     lines = month_str.split('\n')
     # Remove empty last line if exists
     if lines and not lines[-1]:
         lines.pop()
     # Pad all lines to visual chars
-    padded = [pad_line(line, width) for line in lines]
+    padded = [pad_line(line, cal.month_width) for line in lines]
     return padded
 
 
@@ -56,19 +56,19 @@ def pad_height(lines, height, width=20):
     return lines
 
 
-def print_month_list(cal, month_list, col_width=0, month_width=20):
+def print_month_list(cal, month_list):
     """Prints a list of (year, month) pairs in rows of 3."""
     for i in range(0, len(month_list), 3):
         chunk = month_list[i:i + 3]
 
         # Get lines for each month in chunk
-        block_lines = [get_month_lines(cal, y, m, col_width, month_width) for y, m in chunk]
+        block_lines = [get_month_lines(cal, y, m) for y, m in chunk]
 
         # Normalize height
         max_h = max(len(lines) for lines in block_lines)
 
         # Pad all months to max_h
-        block_lines = [pad_height(lines, max_h, month_width) for lines in block_lines]
+        block_lines = [pad_height(lines, max_h, cal.month_width) for lines in block_lines]
 
         # Print the block
         for row in range(max_h):
@@ -80,22 +80,21 @@ def print_month_list(cal, month_list, col_width=0, month_width=20):
             print()
 
 
-def display_grouped_years(cal, month_list, col_width, month_width):
+def display_grouped_years(cal, month_list):
     """Displays months grouped by year with headers."""
-    total_width = month_width * 3 + 4
+    total_width = cal.month_width * 3 + 4
     year_groups = [list(g) for _, g in groupby(month_list, key=lambda item: item[0])]
     for i, group in enumerate(year_groups):
         year_val = group[0][0]
         print(str(year_val).center(total_width))
         print()
-        print_month_list(cal, group, col_width, month_width)
+        print_month_list(cal, group)
         if i < len(year_groups) - 1:
             print()
             print()
 
 
-def display_multiple_months(cal, year, month, count_after, count_before=0, show_year_headers=False,
-                            col_width=0, month_width=20):
+def display_multiple_months(cal, year, month, count_after, count_before=0, show_year_headers=False):
     """Displays a range of months, 3 per row."""
     # pylint: disable=too-many-arguments, too-many-positional-arguments
     # Calculate all (year, month) pairs to display
@@ -109,17 +108,17 @@ def display_multiple_months(cal, year, month, count_after, count_before=0, show_
         curr_y, curr_m = add_months(curr_y, curr_m, 1)
 
     if not show_year_headers:
-        print_month_list(cal, month_list, col_width, month_width)
+        print_month_list(cal, month_list)
     else:
-        display_grouped_years(cal, month_list, col_width, month_width)
+        display_grouped_years(cal, month_list)
 
 
-def display_year(cal, year, extra_years=0, before_years=0, col_width=0, month_width=20):
+def display_year(cal, year, extra_years=0, before_years=0):
     """Displays the whole year calendar with 3 months per row."""
     # pylint: disable=too-many-arguments, too-many-positional-arguments
     start_year = year - before_years
     total_years = before_years + 1 + extra_years
-    total_width = month_width * 3 + 4
+    total_width = cal.month_width * 3 + 4
 
     for i in range(total_years):
         curr_year = start_year + i
@@ -128,8 +127,7 @@ def display_year(cal, year, extra_years=0, before_years=0, col_width=0, month_wi
         print(str(curr_year).center(total_width))
         print()  # Empty line after year header
         display_multiple_months(cal, curr_year, 1, MONTHS_IN_YEAR - 1,
-                                show_year_headers=False, col_width=col_width,
-                                month_width=month_width)
+                                show_year_headers=False)
 
         # Add empty lines between years, but not after the last year
         if i < total_years - 1:
@@ -190,20 +188,6 @@ def main():
     now = datetime.datetime.now()
     year, month = infer_year_month(args, now)
 
-    # Determine dimensions
-    DAYS_IN_WEEK = 7
-    # The calendar module uses 1 space between date columns.
-    # Month width = (col_width * days_in_week) + (days_in_week - 1)
-    SPACES_IN_WEEK_LINE = DAYS_IN_WEEK - 1
-
-    if args.julian:
-        col_width = 3
-        month_width = col_width * DAYS_IN_WEEK + SPACES_IN_WEEK_LINE
-    else:
-        col_width = 0  # default 2
-        default_col_width = 2
-        month_width = default_col_width * DAYS_IN_WEEK + SPACES_IN_WEEK_LINE
-
     # Read config
     config = read_config("~/.hcalrc")
     country = config.get('country')
@@ -220,20 +204,17 @@ def main():
             return
         if args.after > 0 or args.before > 0:
             display_multiple_months(cal, year, 1, MONTHS_IN_YEAR - 1 + args.after,
-                                    args.before, show_year_headers=True,
-                                    col_width=col_width, month_width=month_width)
+                                    args.before, show_year_headers=True)
         else:
-            display_year(cal, year, args.after, args.before,
-                         col_width=col_width, month_width=month_width)
+            display_year(cal, year, args.after, args.before)
 
     elif args.three_months or args.after > 0 or args.before > 0:
         count_before = max(1 if args.three_months else 0, args.before)
         count_after = max(1 if args.three_months else 0, args.after)
-        display_multiple_months(cal, year, month, count_after, count_before,
-                                col_width=col_width, month_width=month_width)
+        display_multiple_months(cal, year, month, count_after, count_before)
 
     else:
-        print(cal.formatmonth(year, month, w=col_width))
+        print(cal.formatmonth(year, month, w=cal.formatmonth_w))
 
 
 if __name__ == "__main__":
