@@ -191,12 +191,18 @@ def main():
     year, month = infer_year_month(args, now)
 
     # Determine dimensions
+    DAYS_IN_WEEK = 7
+    # The calendar module uses 1 space between date columns.
+    # Month width = (col_width * days_in_week) + (days_in_week - 1)
+    SPACES_IN_WEEK_LINE = DAYS_IN_WEEK - 1
+
     if args.julian:
         col_width = 3
-        month_width = 3 * 7 + 6
+        month_width = col_width * DAYS_IN_WEEK + SPACES_IN_WEEK_LINE
     else:
         col_width = 0  # default 2
-        month_width = 2 * 7 + 6
+        default_col_width = 2
+        month_width = default_col_width * DAYS_IN_WEEK + SPACES_IN_WEEK_LINE
 
     # Read config
     config = read_config("~/.hcalrc")
