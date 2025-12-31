@@ -13,6 +13,8 @@ from hcal_util import HighlightCalendar, read_config
 
 
 MONTHS_IN_YEAR = 12
+MONTHS_PER_ROW = 3
+SPACES_BETWEEN_MONTHS = 2
 
 
 def strip_ansi(text):
@@ -58,8 +60,8 @@ def pad_height(lines, height, width):
 
 def print_month_list(cal, month_list):
     """Prints a list of (year, month) pairs in rows of 3."""
-    for i in range(0, len(month_list), 3):
-        chunk = month_list[i:i + 3]
+    for i in range(0, len(month_list), MONTHS_PER_ROW):
+        chunk = month_list[i:i + MONTHS_PER_ROW]
 
         # Get lines for each month in chunk
         block_lines = [get_month_lines(cal, y, m) for y, m in chunk]
@@ -76,13 +78,14 @@ def print_month_list(cal, month_list):
             print("  ".join(block_lines[col][row] for col in range(len(chunk))))
 
         # Add empty line between blocks of months, but not after the last block
-        if i + 3 < len(month_list):
+        if i + MONTHS_PER_ROW < len(month_list):
             print()
 
 
 def display_grouped_years(cal, month_list):
     """Displays months grouped by year with headers."""
-    total_width = cal.month_width * 3 + 4
+    total_width = (cal.month_width * MONTHS_PER_ROW +
+                   SPACES_BETWEEN_MONTHS * (MONTHS_PER_ROW - 1))
     year_groups = [list(g) for _, g in groupby(month_list, key=lambda item: item[0])]
     for i, group in enumerate(year_groups):
         year_val = group[0][0]
@@ -117,7 +120,8 @@ def display_year(cal, year, extra_years=0, before_years=0):
     """Displays the whole year calendar with 3 months per row."""
     start_year = year - before_years
     total_years = before_years + 1 + extra_years
-    total_width = cal.month_width * 3 + 4
+    total_width = (cal.month_width * MONTHS_PER_ROW +
+                   SPACES_BETWEEN_MONTHS * (MONTHS_PER_ROW - 1))
 
     for i in range(total_years):
         curr_year = start_year + i

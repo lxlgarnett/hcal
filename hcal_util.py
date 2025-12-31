@@ -17,6 +17,9 @@ ANSI_COLORS = {
 }
 
 CALENDAR_WIDTH = 64
+DAYS_IN_WEEK = 7
+JULIAN_COL_WIDTH = 3
+DEFAULT_COL_WIDTH = 2
 
 
 def read_config(file_path):
@@ -78,22 +81,21 @@ class HighlightCalendar(calendar.TextCalendar):
         self.julian = julian
 
         # Calculate dimensions
-        days_in_week = 7
-        spaces_in_week_line = days_in_week - 1
+        spaces_in_week_line = DAYS_IN_WEEK - 1
 
         if self.julian:
             # Day of year can be 3 digits
-            col_width = 3
+            col_width = JULIAN_COL_WIDTH
             # The 'w' argument for formatmonth should be 3 for Julian days
-            self.formatmonth_w = 3
+            self.formatmonth_w = JULIAN_COL_WIDTH
         else:
             # Default calendar day width is 2
-            col_width = 2
+            col_width = DEFAULT_COL_WIDTH
             # The 'w' argument for formatmonth should be 0 to use the default width
             # for non-Julian days.
             self.formatmonth_w = 0
 
-        self.month_width = col_width * days_in_week + spaces_in_week_line
+        self.month_width = col_width * DAYS_IN_WEEK + spaces_in_week_line
 
     def formatday(self, day, weekday, width):
         """
