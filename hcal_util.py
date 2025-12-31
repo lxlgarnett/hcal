@@ -2,6 +2,7 @@
 Utility functions and classes for hcal.
 """
 import calendar
+import datetime
 import os
 from hcal_holidays import get_holidays
 
@@ -52,7 +53,7 @@ class HighlightCalendar(calendar.TextCalendar):
     """
 
     def __init__(self, firstweekday=0, today=None, country=None,
-                 highlight_today=True, holiday_color='red'):
+                 highlight_today=True, holiday_color='red', julian=False):
         """
         Initializes the HighlightCalendar.
 
@@ -62,6 +63,7 @@ class HighlightCalendar(calendar.TextCalendar):
             country (str): The country code for holiday calculations (e.g., 'Japan').
             highlight_today (bool): Whether to highlight today's date.
             holiday_color (str): The color name for holidays.
+            julian (bool): Whether to display Julian days (day of year).
         """
         # pylint: disable=too-many-arguments, too-many-positional-arguments
         super().__init__(firstweekday)
@@ -72,6 +74,7 @@ class HighlightCalendar(calendar.TextCalendar):
         self.curr_m = 0
         self.holidays = set()
         self.holiday_color_code = ANSI_COLORS.get(holiday_color.lower(), ANSI_COLORS['red'])
+        self.julian = julian
 
     def formatday(self, day, weekday, width):
         """
@@ -87,7 +90,12 @@ class HighlightCalendar(calendar.TextCalendar):
         Returns:
             str: The formatted day string.
         """
-        day_str = super().formatday(day, weekday, width)
+        if self.julian and day > 0:
+            date_obj = datetime.date(self.curr_y, self.curr_m, day)
+            day_str = str(date_obj.timetuple().tm_yday).rjust(width)
+        else:
+            day_str = super().formatday(day, weekday, width)
+
         if day == 0:
             return day_str
 
