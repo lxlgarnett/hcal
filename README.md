@@ -1,6 +1,11 @@
 # hcal
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Python](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Flxlgarnett%2Fhcal%2Fmain%2Fpyproject.toml&query=%24.project%5B%27requires-python%27%5D&label=python&color=blue)](pyproject.toml) [![Pylint](https://github.com/lxlgarnett/hcal/actions/workflows/pylint.yml/badge.svg)](https://github.com/lxlgarnett/hcal/actions/workflows/pylint.yml) [![GitHub issues](https://img.shields.io/github/issues/lxlgarnett/hcal)](https://github.com/lxlgarnett/hcal/issues) [![GitHub last commit](https://img.shields.io/github/last-commit/lxlgarnett/hcal)](https://github.com/lxlgarnett/hcal/commits/main) [![GitHub top language](https://img.shields.io/github/languages/top/lxlgarnett/hcal)](https://github.com/lxlgarnett/hcal)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Flxlgarnett%2Fhcal%2Fmain%2Fpyproject.toml&query=%24.project%5B%27requires-python%27%5D&label=python&color=blue)](pyproject.toml)
+[![Pylint](https://github.com/lxlgarnett/hcal/actions/workflows/pylint.yml/badge.svg)](https://github.com/lxlgarnett/hcal/actions/workflows/pylint.yml)
+[![GitHub issues](https://img.shields.io/github/issues/lxlgarnett/hcal)](https://github.com/lxlgarnett/hcal/issues)
+[![GitHub last commit](https://img.shields.io/github/last-commit/lxlgarnett/hcal)](https://github.com/lxlgarnett/hcal/commits/main)
+[![GitHub top language](https://img.shields.io/github/languages/top/lxlgarnett/hcal)](https://github.com/lxlgarnett/hcal)
 
 A simple command-line calendar utility written in Python that highlights the current date, weekends, and holidays.
 
