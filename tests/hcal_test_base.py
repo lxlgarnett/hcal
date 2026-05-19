@@ -1,19 +1,17 @@
 """
 Common utilities for hcal tests.
 """
-import re
 import subprocess
 import sys
 import unittest
 
+from hcal_util import strip_ansi
+
+
 class HcalTestCase(unittest.TestCase):
     """Base class for hcal tests with common helpers."""
 
-    @staticmethod
-    def strip_ansi(text):
-        """Helper to strip ANSI escape codes."""
-        ansi_escape = re.compile(r'\x1B(?:[@-Z\\_-]|\[[0-?]*[ -/]*[@-~])')
-        return ansi_escape.sub('', text)
+    strip_ansi = staticmethod(strip_ansi)
 
     def run_hcal(self, *args, check=True):
         """Runs hcal with the given arguments and returns the result."""

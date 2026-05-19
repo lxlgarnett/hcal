@@ -6,21 +6,14 @@ hcal - A command-line calendar with highlighting and holiday support.
 import argparse
 import calendar
 import datetime
-import re
 import sys
 from itertools import groupby
-from hcal_util import HighlightCalendar, read_config
+from hcal_util import HighlightCalendar, read_config, strip_ansi
 
 
 MONTHS_IN_YEAR = 12
 MONTHS_PER_ROW = 3
 SPACES_BETWEEN_MONTHS = 2
-
-
-def strip_ansi(text):
-    """Strips ANSI escape codes from text."""
-    ansi_escape = re.compile(r'\x1B(?:[@-Z\\_-]|\[[0-?]*[ -/]*[@-~])')
-    return ansi_escape.sub('', text)
 
 
 def pad_line(line, width=20):
