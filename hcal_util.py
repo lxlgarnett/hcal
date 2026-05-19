@@ -4,6 +4,7 @@ Utility functions and classes for hcal.
 import calendar
 import datetime
 import os
+import re
 from hcal_holidays import get_holidays
 
 ANSI_COLORS = {
@@ -19,6 +20,13 @@ ANSI_COLORS = {
 DAYS_IN_WEEK = 7
 JULIAN_COL_WIDTH = 3
 DEFAULT_COL_WIDTH = 2
+
+_ANSI_ESCAPE_RE = re.compile(r'\x1B(?:[@-Z\\_-]|\[[0-?]*[ -/]*[@-~])')
+
+
+def strip_ansi(text):
+    """Strips ANSI escape codes from text."""
+    return _ANSI_ESCAPE_RE.sub('', text)
 
 
 def read_config(file_path):
