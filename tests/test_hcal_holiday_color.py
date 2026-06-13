@@ -35,7 +35,7 @@ class TestHcalHolidayColor(unittest.TestCase):
             config_file.write("holiday_color=green\n")
 
         # Run hcal for Jan 2024 (Jan 1 is holiday in JP, and it is a Monday)
-        cmd = [sys.executable, self.hcal_path, "1", "2024"]
+        cmd = [sys.executable, self.hcal_path, "1", "2024", "--color=always"]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
         # Jan 1 is New Year's Day, should be green (\033[32m)
@@ -50,7 +50,7 @@ class TestHcalHolidayColor(unittest.TestCase):
             config_file.write("holiday_color=blue\n")
 
         # Run hcal for Jan 2024
-        cmd = [sys.executable, self.hcal_path, "1", "2024"]
+        cmd = [sys.executable, self.hcal_path, "1", "2024", "--color=always"]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
         # Jan 1 should be blue (\033[34m)
@@ -62,7 +62,7 @@ class TestHcalHolidayColor(unittest.TestCase):
         with open(os.path.join(self.test_dir, ".hcalrc"), "w", encoding="utf-8") as config_file:
             config_file.write("country=Japan\n")
 
-        cmd = [sys.executable, self.hcal_path, "1", "2024"]
+        cmd = [sys.executable, self.hcal_path, "1", "2024", "--color=always"]
         result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
         # Jan 1 should be red (\033[31m)

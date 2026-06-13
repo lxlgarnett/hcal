@@ -44,5 +44,37 @@ class TestHcalFlags(HcalTestCase):
         self.assertTrue("\033[31m" in output or "\033[34m" in output,
                         "Weekend colors should still be present")
 
+    def test_illegal_month_exits_with_error(self):
+        """Test that an out-of-range month fails cleanly instead of tracebacking."""
+        result = self.run_hcal("0", check=False)
+
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("illegal month value", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
+    def test_no_color_when_not_a_terminal(self):
+        """Test that color is disabled by default when stdout is not a tty."""
+        now = datetime.datetime.now()
+        # force_color=False -> rely on default --color=auto in a piped subprocess
+        result = self.run_hcal(str(now.month), str(now.year), force_color=False)
+
+        self.assertNotIn("\033[", result.stdout,
+                         "ANSI codes should be absent when output is not a terminal")
+
+    def test_color_never_disables_color(self):
+        """Test that --color=never suppresses all ANSI codes."""
+        result = self.run_hcal("--color=never", "12", "2025", force_color=False)
+
+        self.assertNotIn("\033[", result.stdout,
+                         "ANSI codes should be absent with --color=never")
+
+    def test_color_always_enables_color(self):
+        """Test that --color=always emits ANSI codes even when piped."""
+        result = self.run_hcal("--color=always", "12", "2025", force_color=False)
+
+        self.assertIn("\033[", result.stdout,
+                      "ANSI codes should be present with --color=always")
+
+
 if __name__ == "__main__":
     unittest.main()
