@@ -53,6 +53,7 @@ Run for a whole year:
 - `-3`: Display previous, current, and next month.
 - `-A, --after <n>`: Display `<n>` additional months after the specified month.
 - `-B, --before <n>`: Display `<n>` additional months before the specified month.
+- `--color <when>`: When to use color: `auto` (default, only when output is a terminal), `always`, or `never`. The `NO_COLOR` environment variable is also honored.
 - `-h`: Disable highlighting of today's date.
 - `-j`: Display Julian days (day of year).
 - `-y [year]`: Display a calendar for the specified year (defaults to current year if no year provided).

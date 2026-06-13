@@ -17,7 +17,7 @@ def test_hcal_highlighting():
     year = now.year
 
     # Run hcal for current month/year
-    cmd = [sys.executable, "./hcal", str(month), str(year)]
+    cmd = [sys.executable, "./hcal", str(month), str(year), "--color=always"]
     result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
     # Expected ANSI code sequence for today
@@ -62,7 +62,7 @@ def test_hcal_no_highlighting_wrong_month():
         month = now.month + 1
         year = now.year
 
-    cmd = [sys.executable, "./hcal", str(month), str(year)]
+    cmd = [sys.executable, "./hcal", str(month), str(year), "--color=always"]
     result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
     ansi_start = "\033[47;30m"
@@ -82,7 +82,7 @@ def test_hcal_colors():
     # Dec 6 is Saturday (Blue).
     # Dec 7 is Sunday (Red).
 
-    cmd = [sys.executable, "./hcal", "12", "2025"]
+    cmd = [sys.executable, "./hcal", "12", "2025", "--color=always"]
     result = subprocess.run(cmd, capture_output=True, text=True, check=True)
     output = result.stdout
 

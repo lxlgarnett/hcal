@@ -64,7 +64,7 @@ class HighlightCalendar(calendar.TextCalendar):
     # pylint: disable=too-many-instance-attributes
 
     def __init__(self, firstweekday=0, today=None, country=None,
-                 highlight_today=True, holiday_color='red', julian=False):
+                 highlight_today=True, holiday_color='red', julian=False, color=True):
         """
         Initializes the HighlightCalendar.
 
@@ -75,11 +75,14 @@ class HighlightCalendar(calendar.TextCalendar):
             highlight_today (bool): Whether to highlight today's date.
             holiday_color (str): The color name for holidays.
             julian (bool): Whether to display Julian days (day of year).
+            color (bool): Whether to emit ANSI color codes at all. When False,
+                all highlighting is disabled (e.g. for non-terminal output).
         """
         # pylint: disable=too-many-arguments, too-many-positional-arguments
         super().__init__(firstweekday)
         self.today = today
         self.country = country
+        self.color = color
         self.highlight_today = highlight_today
         self.curr_y = 0
         self.curr_m = 0
@@ -118,6 +121,7 @@ class HighlightCalendar(calendar.TextCalendar):
         Returns:
             str: The formatted day string.
         """
+        # pylint: disable=too-many-return-statements
         if self.julian and day > 0:
             date_obj = datetime.date(self.curr_y, self.curr_m, day)
             day_str = str(date_obj.timetuple().tm_yday).rjust(width)
@@ -125,6 +129,10 @@ class HighlightCalendar(calendar.TextCalendar):
             day_str = super().formatday(day, weekday, width)
 
         if day == 0:
+            return day_str
+
+        # Without color, emit plain text (e.g. when output is not a terminal)
+        if not self.color:
             return day_str
 
         # Check if this is today

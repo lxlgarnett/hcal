@@ -13,9 +13,17 @@ class HcalTestCase(unittest.TestCase):
 
     strip_ansi = staticmethod(strip_ansi)
 
-    def run_hcal(self, *args, check=True):
-        """Runs hcal with the given arguments and returns the result."""
+    def run_hcal(self, *args, check=True, force_color=True):
+        """Runs hcal with the given arguments and returns the result.
+
+        Tests run hcal in a subprocess (not a terminal), where color now
+        defaults to off. force_color=True (the default) passes --color=always
+        so color-dependent assertions stay deterministic; pass force_color=False
+        to exercise the default 'auto' behavior.
+        """
         cmd = [sys.executable, "./hcal"] + list(args)
+        if force_color:
+            cmd.append("--color=always")
         return subprocess.run(cmd, capture_output=True, text=True, check=check)
 
     def assert_visual_length(self, line, expected_length):
