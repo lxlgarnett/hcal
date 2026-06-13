@@ -12,6 +12,8 @@ from itertools import groupby
 from hcal_util import HighlightCalendar, read_config, strip_ansi
 
 
+__version__ = "2026.06.13"
+
 MONTHS_IN_YEAR = 12
 MONTHS_PER_ROW = 3
 SPACES_BETWEEN_MONTHS = 2
@@ -176,8 +178,12 @@ def main():
     parser = argparse.ArgumentParser(description="Show calendar on terminal", add_help=False)
     parser.add_argument('--help', action='help', default=argparse.SUPPRESS,
                         help='show this help message and exit')
+    parser.add_argument('--version', action='version', version=f'hcal {__version__}',
+                        help="show program's version number and exit")
     parser.add_argument('-h', action='store_true', dest='no_highlight',
                         help="Disable highlighting of today's date")
+    parser.add_argument('-m', action='store_true', dest='monday',
+                        help='Start weeks on Monday (default: Sunday)')
     parser.add_argument('-3', action='store_true', dest='three_months',
                         help='Display previous, current and next month')
     parser.add_argument('-A', '--after', type=int, default=0,
@@ -211,7 +217,8 @@ def main():
     holiday_color = config.get('holiday_color', 'red')
 
     # TextCalendar instance
-    cal = HighlightCalendar(calendar.SUNDAY, today=now.date(), country=country,
+    firstweekday = calendar.MONDAY if args.monday else calendar.SUNDAY
+    cal = HighlightCalendar(firstweekday, today=now.date(), country=country,
                             highlight_today=not args.no_highlight,
                             holiday_color=holiday_color, julian=args.julian,
                             color=should_use_color(args.color))

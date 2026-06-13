@@ -56,7 +56,9 @@ Run for a whole year:
 - `--color <when>`: When to use color: `auto` (default, only when output is a terminal), `always`, or `never`. The `NO_COLOR` environment variable is also honored.
 - `-h`: Disable highlighting of today's date.
 - `-j`: Display Julian days (day of year).
+- `-m`: Start weeks on Monday (default: Sunday).
 - `-y [year]`: Display a calendar for the specified year (defaults to current year if no year provided).
+- `--version`: Show the program's version number and exit.
 
 ### Configuration
 

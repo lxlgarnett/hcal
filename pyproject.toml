@@ -1,6 +1,6 @@
 [project]
 name = "hcal"
-version = "1.0.0"
+version = "2026.06.13"
 description = "A simple command-line calendar utility"
 authors = [
     { name = "Xiaolei Li" }
