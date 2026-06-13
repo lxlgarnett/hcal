@@ -87,6 +87,7 @@ class HighlightCalendar(calendar.TextCalendar):
         self.curr_y = 0
         self.curr_m = 0
         self.holidays = set()
+        self._holiday_cache = {}
         self.holiday_color_code = ANSI_COLORS.get(holiday_color.lower(), ANSI_COLORS['red'])
         self.julian = julian
 
@@ -172,5 +173,9 @@ class HighlightCalendar(calendar.TextCalendar):
         self.curr_y = theyear
         self.curr_m = themonth
         if self.country:
-            self.holidays = get_holidays(self.country, self.curr_y)
+            # Holidays only depend on the year, so cache per-year to avoid
+            # recomputing for every month of a multi-month or full-year view.
+            if theyear not in self._holiday_cache:
+                self._holiday_cache[theyear] = get_holidays(self.country, theyear)
+            self.holidays = self._holiday_cache[theyear]
         return super().formatmonth(theyear, themonth, w, l)
