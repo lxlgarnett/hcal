@@ -33,3 +33,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# SonarQube
+.env.sonar
+.scannerwork/
+.coverage
+coverage.xml
